@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                  = "default"
+    name                  = "agentpool"
     availability_zones    = [1, 2, 3]
     enable_auto_scaling   = true
     enable_node_public_ip = false
