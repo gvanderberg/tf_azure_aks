@@ -30,10 +30,6 @@ variable "docker_bridge_cidr" {
   default = "__docker_bridge_cidr__"
 }
 
-variable "service_cidr" {
-  default = "__service_cidr__"
-}
-
 variable "kubernetes_dashboard_enabled" {
   default = "__kubernetes_dashboard_enabled__"
 }
@@ -64,6 +60,10 @@ variable "node_count" {
 
 variable "resource_group_name" {
   default = "__resource_group_name__"
+}
+
+variable "service_cidr" {
+  default = "__service_cidr__"
 }
 
 variable "subnet_name" {

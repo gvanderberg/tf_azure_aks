@@ -10,9 +10,9 @@ module "log" {
   source = "./modules/log"
 
   name                = var.log_analytics_workspace_name
-  sku                 = var.log_analytics_workspace_sku
   location            = module.rg.resource_group_location
   resource_group_name = module.rg.resource_group_name
+  sku                 = var.log_analytics_workspace_sku
   tags                = var.tags
 }
 
@@ -36,6 +36,8 @@ module "aks" {
   source = "./modules/aks"
 
   name                         = var.cluster_name
+  location                     = module.rg.resource_group_location
+  resource_group_name          = module.rg.resource_group_name
   client_id                    = module.app.client_id
   client_secret                = module.app.client_secret
   dns_service_ip               = var.dns_service_ip
@@ -43,10 +45,8 @@ module "aks" {
   kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
   kubernetes_version           = var.kubernetes_version
   load_balancer_sku            = var.load_balancer_sku
-  location                     = module.rg.resource_group_location
   log_analytics_workspace_id   = module.log.log_analytics_workspace_id
   node_count                   = var.node_count
-  resource_group_name          = module.rg.resource_group_name
   service_cidr                 = var.service_cidr
   vm_size                      = var.vm_size
   vnet_subnet_id               = module.vnet.subnet_id
