@@ -86,4 +86,5 @@ variable "tags" {
     location    = "__tags_location__"
     managedBy   = "__tags_managed_by__"
   }
+  type = map
 }
