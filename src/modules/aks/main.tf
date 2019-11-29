@@ -16,16 +16,17 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                = "default"
-    availability_zones  = [1, 2, 3]
-    enable_auto_scaling = true
-    max_count           = var.node_count + 2
-    min_count           = var.node_count
-    node_count          = var.node_count
-    os_disk_size_gb     = "64"
-    type                = "VirtualMachineScaleSets"
-    vm_size             = var.vm_size
-    vnet_subnet_id      = var.vnet_subnet_id
+    name                  = "default"
+    availability_zones    = [1, 2, 3]
+    enable_auto_scaling   = true
+    enable_node_public_ip = false
+    max_count             = var.node_count + 2
+    min_count             = var.node_count
+    node_count            = var.node_count
+    os_disk_size_gb       = "64"
+    type                  = "VirtualMachineScaleSets"
+    vm_size               = var.vm_size
+    vnet_subnet_id        = var.vnet_subnet_id
   }
 
   network_profile {
