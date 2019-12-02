@@ -17,8 +17,10 @@ provider "azurerm" {
 }
 
 provider "helm" {
-  version        = "=0.10.4"
-  install_tiller = true
+  version         = "=0.10.4"
+  install_tiller  = true
+  namespace       = "kube-system"
+  service_account = "tiller"
 
   kubernetes {
     host                   = module.aks.host
