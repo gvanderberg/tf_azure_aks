@@ -57,8 +57,6 @@ resource "kubernetes_service_account" "this" {
   }
 
   automount_service_account_token = true
-
-  depends_on = [azurerm_kubernetes_cluster.this]
 }
 
 resource "kubernetes_cluster_role_binding" "this" {
@@ -78,8 +76,6 @@ resource "kubernetes_cluster_role_binding" "this" {
     api_group = ""
     namespace = "kube-system"
   }
-
-  depends_on = [kubernetes_service_account.this]
 }
 
 # Add Kubernetes Stable Helm charts repo
@@ -119,6 +115,4 @@ resource "helm_release" "nginx_ingress" {
     name  = "rbac.create"
     value = "true"
   }
-
-  depends_on = [kubernetes_service_account.this]
 }
