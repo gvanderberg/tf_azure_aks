@@ -9,7 +9,8 @@ resource "random_string" "password" {
 }
 
 resource "azuread_application" "this" {
-  name = var.name
+  name       = var.name
+  depends_on = [random_string.password]
 }
 
 resource "azuread_service_principal" "this" {
@@ -21,7 +22,7 @@ resource "azuread_service_principal_password" "this" {
   end_date             = "2299-12-30T23:00:00Z"
   service_principal_id = azuread_service_principal.this.id
   value                = random_string.password.result
-  depends_on           = [azuread_service_principal.this, random_string.password]
+  depends_on           = [azuread_service_principal.this]
 }
 
 resource "azurerm_role_assignment" "this" {

@@ -11,4 +11,5 @@ resource "azurerm_subnet" "this" {
   resource_group_name  = var.resource_group_name
   address_prefix       = "10.51.12.0/23"
   virtual_network_name = azurerm_virtual_network.this.name
+  depends_on           = [azurerm_virtual_network.this]
 }
