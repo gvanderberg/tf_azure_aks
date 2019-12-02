@@ -33,6 +33,11 @@ variable "kubernetes_version" {
   type        = string
 }
 
+variable "load_balancer_ip" {
+  description = "Specifies the SKU of the Load Balancer used for this Kubernetes Cluster."
+  type        = string
+}
+
 variable "load_balancer_sku" {
   description = "Specifies the SKU of the Load Balancer used for this Kubernetes Cluster."
   type        = string

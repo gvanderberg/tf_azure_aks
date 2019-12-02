@@ -38,6 +38,10 @@ variable "kubernetes_version" {
   default = "__kubernetes_version__"
 }
 
+variable "load_balancer_ip" {
+  default = "__load_balancer_ip__"
+}
+
 variable "load_balancer_sku" {
   default = "__load_balancer_sku__"
 }

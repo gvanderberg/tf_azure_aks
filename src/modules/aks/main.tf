@@ -49,3 +49,42 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   tags = var.tags
 }
+
+# Add Kubernetes Stable Helm charts repo
+data "helm_repository" "this" {
+  name = "stable"
+  url  = "https://kubernetes-charts.storage.googleapis.com"
+}
+
+# Install Nginx Ingress using Helm Chart
+resource "helm_release" "nginx_ingress" {
+  name       = "nginx-ingress"
+  repository = data.helm_repository.this.metadata.0.name
+  chart      = "nginx-ingress"
+  namespace  = "kube-system"
+
+  set {
+    name  = "controller.image.tag"
+    value = "0.25.0"
+  }
+
+  set {
+    name  = "controller.service.annotations.service.beta.kubernetes.io/azure-load-balancer-internal"
+    value = "true"
+  }
+
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = var.load_balancer_ip
+  }
+
+  set {
+    name  = "controller.service.type"
+    value = "LoadBalancer"
+  }
+
+  set {
+    name  = "rbac.create"
+    value = "true"
+  }
+}

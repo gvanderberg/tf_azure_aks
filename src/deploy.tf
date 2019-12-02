@@ -44,6 +44,7 @@ module "aks" {
   docker_bridge_cidr           = var.docker_bridge_cidr
   kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
   kubernetes_version           = var.kubernetes_version
+  load_balancer_ip             = var.load_balancer_ip
   load_balancer_sku            = var.load_balancer_sku
   log_analytics_workspace_id   = module.log.log_analytics_workspace_id
   node_count                   = var.node_count
