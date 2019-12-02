@@ -82,13 +82,11 @@ resource "kubernetes_cluster_role_binding" "this" {
   depends_on = [kubernetes_service_account.this]
 }
 
-# Add Kubernetes Stable Helm charts repo
 data "helm_repository" "this" {
   name = "stable"
   url  = "https://kubernetes-charts.storage.googleapis.com"
 }
 
-# Install Nginx Ingress using Helm Chart
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
   repository = data.helm_repository.this.metadata[0].name
@@ -120,5 +118,19 @@ resource "helm_release" "nginx_ingress" {
     value = "true"
   }
 
-  depends_on = [kubernetes_service_account.this]
+  depends_on = [kubernetes_cluster_role_binding.this]
+}
+
+resource "helm_release" "kured" {
+  name       = "kured"
+  repository = data.helm_repository.this.metadata[0].name
+  chart      = "kured"
+  namespace  = "kube-system"
+
+  set {
+    name  = "image.tag"
+    value = "1.2.0"
+  }
+
+  depends_on = [kubernetes_cluster_role_binding.this]
 }
