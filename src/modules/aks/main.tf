@@ -1,37 +1,3 @@
-data "azurerm_subscription" "this" {}
-
-resource "random_string" "password" {
-  length  = 32
-  upper   = false
-  lower   = true
-  number  = true
-  special = false
-}
-
-resource "azuread_application" "this" {
-  name       = format("%s-%s", var.name, "sp")
-  depends_on = [random_string.password]
-}
-
-resource "azuread_service_principal" "this" {
-  application_id = azuread_application.this.application_id
-  depends_on     = [azuread_application.this]
-}
-
-resource "azuread_service_principal_password" "this" {
-  end_date             = "2299-12-30T23:00:00Z"
-  service_principal_id = azuread_service_principal.this.id
-  value                = random_string.password.result
-  depends_on           = [azuread_service_principal.this]
-}
-
-resource "azurerm_role_assignment" "this" {
-  principal_id         = azuread_service_principal.this.id
-  role_definition_name = "Network Contributor"
-  scope                = data.azurerm_subscription.this.id
-  depends_on           = [azuread_service_principal_password.this]
-}
-
 resource "azurerm_kubernetes_cluster" "this" {
   name                = var.name
   location            = var.location
@@ -73,8 +39,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   service_principal {
-    client_id     = azuread_application.this.application_id
-    client_secret = azuread_service_principal_password.this.value
+    client_id     = var.client_id
+    client_secret = var.client_secret
   }
 
   role_based_access_control {
@@ -82,7 +48,6 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   tags       = var.tags
-  depends_on = [azuread_application.this, azuread_service_principal_password.this]
 }
 
 resource "kubernetes_service_account" "this" {
@@ -117,43 +82,43 @@ resource "kubernetes_cluster_role_binding" "this" {
   depends_on = [kubernetes_service_account.this]
 }
 
-# # Add Kubernetes Stable Helm charts repo
-# data "helm_repository" "this" {
-#   name = "stable"
-#   url  = "https://kubernetes-charts.storage.googleapis.com"
-# }
+# Add Kubernetes Stable Helm charts repo
+data "helm_repository" "this" {
+  name = "stable"
+  url  = "https://kubernetes-charts.storage.googleapis.com"
+}
 
-# # Install Nginx Ingress using Helm Chart
-# resource "helm_release" "nginx_ingress" {
-#   name       = "nginx-ingress"
-#   repository = data.helm_repository.this.metadata[0].name
-#   chart      = "nginx-ingress"
-#   namespace  = "kube-system"
+# Install Nginx Ingress using Helm Chart
+resource "helm_release" "nginx_ingress" {
+  name       = "nginx-ingress"
+  repository = data.helm_repository.this.metadata[0].name
+  chart      = "nginx-ingress"
+  namespace  = "kube-system"
 
-#   set {
-#     name  = "controller.image.tag"
-#     value = "0.25.0"
-#   }
+  set {
+    name  = "controller.image.tag"
+    value = "0.25.0"
+  }
 
-#   set {
-#     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal\""
-#     value = "true"
-#   }
+  set {
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal\""
+    value = "true"
+  }
 
-#   set {
-#     name  = "controller.service.loadBalancerIP"
-#     value = var.load_balancer_ip
-#   }
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = var.load_balancer_ip
+  }
 
-#   set {
-#     name  = "controller.service.type"
-#     value = "LoadBalancer"
-#   }
+  set {
+    name  = "controller.service.type"
+    value = "LoadBalancer"
+  }
 
-#   set {
-#     name  = "rbac.create"
-#     value = "true"
-#   }
+  set {
+    name  = "rbac.create"
+    value = "true"
+  }
 
-#   depends_on = [kubernetes_service_account.this]
-# }
+  depends_on = [kubernetes_service_account.this]
+}
