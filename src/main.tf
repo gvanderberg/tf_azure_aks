@@ -16,27 +16,27 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-# provider "helm" {
-#   version         = "=0.10.4"
-#   install_tiller  = true
-#   namespace       = "kube-system"
-#   service_account = "tiller"
+provider "helm" {
+  version         = "=0.10.4"
+  install_tiller  = true
+  namespace       = "kube-system"
+  service_account = "tiller"
 
-#   kubernetes {
-#     host                   = module.aks.host
-#     client_certificate     = base64decode(module.aks.client_certificate)
-#     client_key             = base64decode(module.aks.client_key)
-#     cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
-#   }
-# }
+  kubernetes {
+    host                   = module.aks.host
+    client_certificate     = base64decode(module.aks.client_certificate)
+    client_key             = base64decode(module.aks.client_key)
+    cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
+  }
+}
 
-# provider "kubernetes" {
-#   version                = "=1.10"
-#   host                   = module.aks.host
-#   client_certificate     = base64decode(module.aks.client_certificate)
-#   client_key             = base64decode(module.aks.client_key)
-#   cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
-# }
+provider "kubernetes" {
+  version                = "=1.10"
+  host                   = module.aks.host
+  client_certificate     = base64decode(module.aks.client_certificate)
+  client_key             = base64decode(module.aks.client_key)
+  cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
+}
 
 provider "random" {
   version = "=2.1.2"
