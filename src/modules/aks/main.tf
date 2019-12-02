@@ -50,37 +50,37 @@ resource "azurerm_kubernetes_cluster" "this" {
   tags = var.tags
 }
 
-resource "kubernetes_service_account" "this" {
-  metadata {
-    name      = "tiller"
-    namespace = "kube-system"
-  }
+# resource "kubernetes_service_account" "this" {
+#   metadata {
+#     name      = "tiller"
+#     namespace = "kube-system"
+#   }
 
-  automount_service_account_token = true
+#   automount_service_account_token = true
 
-  depends_on = [azurerm_kubernetes_cluster.this]
-}
+#   depends_on = [azurerm_kubernetes_cluster.this]
+# }
 
-resource "kubernetes_cluster_role_binding" "this" {
-  metadata {
-    name = "tiller"
-  }
+# resource "kubernetes_cluster_role_binding" "this" {
+#   metadata {
+#     name = "tiller"
+#   }
 
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
-  }
+#   role_ref {
+#     api_group = "rbac.authorization.k8s.io"
+#     kind      = "ClusterRole"
+#     name      = "cluster-admin"
+#   }
 
-  subject {
-    kind      = "ServiceAccount"
-    name      = "tiller"
-    api_group = ""
-    namespace = "kube-system"
-  }
+#   subject {
+#     kind      = "ServiceAccount"
+#     name      = "tiller"
+#     api_group = ""
+#     namespace = "kube-system"
+#   }
 
-  depends_on = [kubernetes_service_account.this]
-}
+#   depends_on = [kubernetes_service_account.this]
+# }
 
 # Add Kubernetes Stable Helm charts repo
 # data "helm_repository" "this" {
