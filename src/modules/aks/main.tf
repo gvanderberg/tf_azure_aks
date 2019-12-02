@@ -101,7 +101,7 @@ resource "helm_release" "nginx_ingress" {
   }
 
   set {
-    name  = "controller.service.annotations.service.beta.kubernetes.io/azure-load-balancer-internal"
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal\""
     value = "true"
   }
 
