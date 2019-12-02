@@ -3,15 +3,15 @@ variable "name" {
   type        = string
 }
 
-variable "client_id" {
-  description = "The Client ID for the Service Principal."
-  type        = string
-}
+# variable "client_id" {
+#   description = "The Client ID for the Service Principal."
+#   type        = string
+# }
 
-variable "client_secret" {
-  description = "The Client Secret for the Service Principal."
-  type        = string
-}
+# variable "client_secret" {
+#   description = "The Client Secret for the Service Principal."
+#   type        = string
+# }
 
 variable "dns_service_ip" {
   description = "IP address within the Kubernetes service address range that will be used by cluster service discovery (kube-dns)."

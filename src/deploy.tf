@@ -16,11 +16,11 @@ module "log" {
   tags                = var.tags
 }
 
-module "app" {
-  source = "./modules/app"
+# module "app" {
+#   source = "./modules/app"
 
-  name = format("%s-%s", var.cluster_name, "sp")
-}
+#   name = format("%s-%s", var.cluster_name, "sp")
+# }
 
 module "vnet" {
   source = "./modules/vnet"
@@ -38,8 +38,8 @@ module "aks" {
   name                         = var.cluster_name
   location                     = module.rg.resource_group_location
   resource_group_name          = module.rg.resource_group_name
-  client_id                    = module.app.client_id
-  client_secret                = module.app.client_secret
+  # client_id                    = module.app.client_id
+  # client_secret                = module.app.client_secret
   dns_service_ip               = var.dns_service_ip
   docker_bridge_cidr           = var.docker_bridge_cidr
   kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
