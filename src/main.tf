@@ -42,15 +42,15 @@ provider "random" {
   version = "=2.1.2"
 }
 
-# terraform {
-#   backend "remote" {
-#     hostname     = "app.terraform.io"
-#     organization = "outsurance"
-#     token        = "__token__"
+terraform {
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "titansoft"
+    token        = "__token__"
 
-#     workspaces {
-#       # name = "__workspace_name__"
-#       prefix = "personal_aks-"
-#     }
-#   }
-# }
+    workspaces {
+      name = "__workspace_name__"
+      # prefix = "personal_aks-"
+    }
+  }
+}
