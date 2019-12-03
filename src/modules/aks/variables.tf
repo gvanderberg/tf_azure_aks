@@ -3,6 +3,26 @@ variable "name" {
   type        = string
 }
 
+variable "aad_client_app_id" {
+  description = "The Client ID of an Azure Active Directory Application"
+  type        = string
+}
+
+variable "aad_server_app_id" {
+  description = "The Server ID of an Azure Active Directory Application."
+  type        = string
+}
+
+variable "aad_server_app_secret" {
+  description = "The Server Secret of an Azure Active Directory Application."
+  type        = string
+}
+
+variable "aad_tenant_id" {
+  description = "The Tenant ID used for Azure Active Directory Application."
+  type        = string
+}
+
 variable "client_id" {
   description = "The Client ID for the Service Principal."
   type        = string

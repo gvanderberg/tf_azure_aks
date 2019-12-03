@@ -38,6 +38,10 @@ module "aks" {
   name                         = var.cluster_name
   location                     = module.rg.resource_group_location
   resource_group_name          = module.rg.resource_group_name
+  aad_client_app_id            = var.aad_client_app_id
+  aad_server_app_id            = var.aad_server_app_id
+  aad_server_app_secret        = var.aad_server_app_secret
+  aad_tenant_id                = var.aad_tenant_id
   client_id                    = module.app.client_id
   client_secret                = module.app.client_secret
   dns_service_ip               = var.dns_service_ip

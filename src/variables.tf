@@ -13,10 +13,26 @@ variable "subscription_id" {
 }
 
 variable "tenant_id" {
-  default = "9218c3db-1cca-48b1-8f6b-a95a47b58158"
+  default = "__tenant_id__"
 }
 
 # -------------------------------------------
+
+variable "aad_client_app_id" {
+  default = "__aad_client_app_id__"
+}
+
+variable "aad_server_app_id" {
+  default = "__aad_server_app_id__"
+}
+
+variable "aad_server_app_secret" {
+  default = "__aad_server_app_secret__"
+}
+
+variable "aad_tenant_id" {
+  default = "__aad_tenant_id__"
+}
 
 variable "cluster_name" {
   default = "__cluster_name__"

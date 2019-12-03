@@ -22,7 +22,6 @@ resource "azurerm_kubernetes_cluster" "this" {
     enable_node_public_ip = false
     max_count             = var.node_count + 2
     min_count             = var.node_count
-    node_count            = var.node_count
     os_disk_size_gb       = "64"
     type                  = "VirtualMachineScaleSets"
     vm_size               = var.vm_size
@@ -44,10 +43,17 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   role_based_access_control {
+    azure_active_directory = {
+      client_app_id     = var.aad_client_app_id
+      server_app_id     = var.aad_server_app_id
+      server_app_secret = var.aad_server_app_secret
+      tenant_id         = var.aad_tenant_id
+    }
+
     enabled = true
   }
 
-  tags       = var.tags
+  tags = var.tags
 }
 
 resource "kubernetes_service_account" "this" {
