@@ -1,0 +1,10 @@
+steps:
+- task: GitVersion@5
+  inputs:
+    preferBundledVersion: false
+    configFilePath: GitVersion.yml
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: $(Build.SourcesDirectory)/src
+    ArtifactName: drop

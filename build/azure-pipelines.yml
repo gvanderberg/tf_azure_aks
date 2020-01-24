@@ -1,0 +1,19 @@
+trigger:
+  - master
+
+variables:
+- group: 'Terraform BE'
+- group: 'Terraform CLI'
+- name: location
+  value: 'southafricanorth'
+- name: tags_created_by
+  value: 'Terraform'
+- name: tags_location
+  value: '$(location)'
+- name: tf_path
+  value: '$(Pipeline.Workspace)/drop'
+- name: tf_state_key
+  value: '$(Build.BuildId)'
+
+stages:
+- template: terraform-stages.yml

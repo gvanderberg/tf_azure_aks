@@ -1,0 +1,10 @@
+jobs:
+- deployment: terraform_apply
+  displayName: 'terraform apply'
+  environment: prod
+
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: terraform-apply-steps.yml

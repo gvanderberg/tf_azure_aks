@@ -1,0 +1,10 @@
+jobs:
+- deployment: terraform_plan
+  displayName: 'terraform plan'
+  environment: prod
+
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: terraform-plan-steps.yml

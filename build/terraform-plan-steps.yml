@@ -1,0 +1,40 @@
+steps:
+- download: current
+  artifact: 'drop'
+
+- task: replacetokens@3
+  displayName: 'Replace tokens in $(Pipeline.Workspace)/drop/*.tf'
+  inputs:
+    targetFiles: '$(Pipeline.Workspace)/drop/*.tf'
+    escapeType: none
+    tokenPrefix: '__'
+    tokenSuffix: '__'
+
+- script: |
+    set -e
+
+    echo 'hostname = "app.terraform.io"' | tee -a backend.tfvars
+    echo 'organization = "$(tf_organization)"' | tee -a backend.tfvars
+    echo 'token = "$(tf_token)"' | tee -a backend.tfvars
+    echo 'workspaces { name = "$(workspace_name)" }' | tee -a backend.tfvars
+
+    # Initialize Terraform.
+    terraform init -no-color -input=false -backend-config="backend.tfvars"
+
+    # Plan Terraform.
+    terraform plan -out=tfplan -no-color -input=false
+  displayName: 'terraform plan'
+  env:
+    ARM_CLIENT_ID: $(tf_client_id)
+    ARM_CLIENT_SECRET: $(tf_client_secret)
+    ARM_TENANT_ID: $(tf_tenant_id)
+    ARM_SUBSCRIPTION_ID: $(tf_subscription_id)
+  workingDirectory: '$(Pipeline.Workspace)/drop'
+
+- script: |
+    echo "Compressing $(tf_path) directory..."
+    tar -czf $(tf_state_key).tar.gz -C $(tf_path) .
+  displayName: 'Compress $(tf_path) Artifact'
+
+- publish: $(tf_state_key).tar.gz
+  artifact: '$(artifact_name)'

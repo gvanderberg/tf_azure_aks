@@ -1,0 +1,6 @@
+jobs:
+- job: build
+  displayName: 'package scripts'
+
+  steps:
+  - template: terraform-build-steps.yml
