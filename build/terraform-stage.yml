@@ -1,0 +1,38 @@
+parameters:
+- name: condition
+  default: ''
+  type: string
+- name: dependsOn
+  default: ''
+  type: string
+- name: displayName
+  type: string
+- name: environment
+  type: string
+- name: stageName
+  type: string
+- name: templateName
+  type: string
+- name: variableTemplate
+  type: string
+
+stages:
+- stage: ${{ parameters.stageName }}
+  dependsOn: ${{ parameters.dependsOn }}
+  displayName: ${{ parameters.displayName }}
+  condition: ${{ parameters.condition }}
+
+  jobs:
+  - deployment: deployment
+    displayName: deployment job
+    pool:
+      vmImage: ubuntu-latest
+    environment: ${{ parameters.environment }}
+    variables:
+    - template: ${{ parameters.variableTemplate }}
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: ${{ parameters.templateName }}

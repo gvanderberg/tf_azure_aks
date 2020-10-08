@@ -1,0 +1,7 @@
+steps:
+  - bash: |
+      set -e
+
+      echo 'fqdn = "$(fqdn)"'
+    displayName: 'terraform test'
+    name: 'terraformTest'

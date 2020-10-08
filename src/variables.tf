@@ -1,23 +1,3 @@
-# -------------------------------------------
-
-variable "client_id" {
-  default = "__client_id__"
-}
-
-variable "client_secret" {
-  default = "__client_secret__"
-}
-
-variable "subscription_id" {
-  default = "__subscription_id__"
-}
-
-variable "tenant_id" {
-  default = "__tenant_id__"
-}
-
-# -------------------------------------------
-
 variable "aad_client_app_id" {
   default = "__aad_client_app_id__"
 }
@@ -32,6 +12,10 @@ variable "aad_server_app_secret" {
 
 variable "aad_tenant_id" {
   default = "__aad_tenant_id__"
+}
+
+variable "admin_password" {
+  default = "__admin_password__"
 }
 
 variable "cluster_name" {
@@ -58,10 +42,6 @@ variable "load_balancer_ip" {
   default = "__load_balancer_ip__"
 }
 
-variable "load_balancer_sku" {
-  default = "__load_balancer_sku__"
-}
-
 variable "location" {
   default = "__location__"
 }
@@ -86,16 +66,24 @@ variable "service_cidr" {
   default = "__service_cidr__"
 }
 
+variable "ssh_key_data" {
+  default = "__ssh_key_data__"
+}
+
 variable "subnet_name" {
   default = "__subnet_name__"
 }
 
-variable "network_name" {
-  default = "__network_name__"
+variable "subnet_virtual_network_name" {
+  default = "__subnet_virtual_network_name__"
 }
 
-variable "vm_size" {
-  default = "__vm_size__"
+variable "subnet_resource_group_name" {
+  default = "__subnet_resource_group_name__"
+}
+
+variable "virtual_machine_size" {
+  default = "__virtual_machine_size__"
 }
 
 variable "tags" {

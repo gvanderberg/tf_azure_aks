@@ -1,26 +1,14 @@
 provider "azuread" {
-  version = "=0.7.0"
-
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  subscription_id = var.subscription_id
-  tenant_id       = var.tenant_id
+  version = "~>0.11.0"
 }
 
 provider "azurerm" {
-  version = "=1.37.0"
-
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  subscription_id = var.subscription_id
-  tenant_id       = var.tenant_id
+  version = "~>2.30.0"
+  features {}
 }
 
 provider "helm" {
-  version         = "=0.10.4"
-  install_tiller  = true
-  namespace       = "kube-system"
-  service_account = "tiller"
+  version = "~>1.3.1"
 
   kubernetes {
     host                   = module.aks.host
@@ -31,7 +19,7 @@ provider "helm" {
 }
 
 provider "kubernetes" {
-  version                = "=1.10"
+  version                = "~>1.13.2"
   host                   = module.aks.host
   client_certificate     = base64decode(module.aks.client_certificate)
   client_key             = base64decode(module.aks.client_key)
@@ -39,18 +27,56 @@ provider "kubernetes" {
 }
 
 provider "random" {
-  version = "=2.1.2"
+  version = "~>2.3.0"
 }
 
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "titansoft"
-    token        = "__token__"
+  required_version = "~>0.12.0"
+  backend "remote" {}
+}
 
-    workspaces {
-      name = "__workspace_name__"
-      # prefix = "personal_aks-"
-    }
-  }
+module "rg" {
+  source = "./modules/resource_group"
+
+  resource_group_name     = var.resource_group_name
+  resource_group_location = var.location
+  tags                    = var.tags
+}
+
+module "law" {
+  source = "./modules/log_analytics"
+
+  name                = var.log_analytics_workspace_name
+  location            = module.rg.location
+  resource_group_name = module.rg.name
+  sku                 = var.log_analytics_workspace_sku
+  tags                = var.tags
+}
+
+module "aks" {
+  source = "./modules/kubernetes"
+
+  name                         = var.cluster_name
+  location                     = module.rg.location
+  resource_group_name          = module.rg.name
+  aad_client_app_id            = var.aad_client_app_id
+  aad_server_app_id            = var.aad_server_app_id
+  aad_server_app_secret        = var.aad_server_app_secret
+  aad_tenant_id                = var.aad_tenant_id
+  admin_username               = "azuresupport"
+  admin_password               = var.admin_password
+  dns_service_ip               = var.dns_service_ip
+  docker_bridge_cidr           = var.docker_bridge_cidr
+  kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
+  kubernetes_version           = var.kubernetes_version
+  load_balancer_ip             = var.load_balancer_ip
+  log_analytics_workspace_id   = module.law.id
+  node_count                   = var.node_count
+  service_cidr                 = var.service_cidr
+  ssh_key_data                 = var.ssh_key_data
+  subnet_name                  = var.subnet_name
+  subnet_virtual_network_name  = var.subnet_virtual_network_name
+  subnet_resource_group_name   = var.subnet_resource_group_name
+  vm_size                      = var.virtual_machine_size
+  tags                         = var.tags
 }

@@ -1,8 +1,3 @@
-variable "name" {
-  description = "The name of the Managed Kubernetes Cluster to create."
-  type        = string
-}
-
 variable "aad_client_app_id" {
   description = "The Client ID of an Azure Active Directory Application"
   type        = string
@@ -23,13 +18,13 @@ variable "aad_tenant_id" {
   type        = string
 }
 
-variable "client_id" {
-  description = "The Client ID for the Service Principal."
+variable "admin_username" {
+  description = "The Admin Username for the Cluster."
   type        = string
 }
 
-variable "client_secret" {
-  description = "The Client Secret for the Service Principal."
+variable "admin_password" {
+  description = "The Admin Password for the Cluster."
   type        = string
 }
 
@@ -54,12 +49,7 @@ variable "kubernetes_version" {
 }
 
 variable "load_balancer_ip" {
-  description = "Specifies the SKU of the Load Balancer used for this Kubernetes Cluster."
-  type        = string
-}
-
-variable "load_balancer_sku" {
-  description = "Specifies the SKU of the Load Balancer used for this Kubernetes Cluster."
+  description = "Specifies the IP address of the Load Balancer used for this Kubernetes Cluster."
   type        = string
 }
 
@@ -70,6 +60,11 @@ variable "location" {
 
 variable "log_analytics_workspace_id" {
   description = "The ID of the Log Analytics Workspace which the OMS Agent should send data to."
+  type        = string
+}
+
+variable "name" {
+  description = "The name of the Managed Kubernetes Cluster to create."
   type        = string
 }
 
@@ -88,6 +83,26 @@ variable "service_cidr" {
   type        = string
 }
 
+variable "ssh_key_data" {
+  description = "The Public SSH Key used to access the cluster."
+  type        = string
+}
+
+variable "subnet_name" {
+  description = "Specifies the name of the Subnet."
+  type        = string
+}
+
+variable "subnet_virtual_network_name" {
+  description = "Specifies the name of the Virtual Network this Subnet is located within."
+  type        = string
+}
+
+variable "subnet_resource_group_name" {
+  description = "Specifies the name of the resource group the Virtual Network is located in."
+  type        = string
+}
+
 variable "tags" {
   description = "A mapping of tags to assign to the resource"
   type        = map
@@ -95,10 +110,5 @@ variable "tags" {
 
 variable "vm_size" {
   description = "The size of each VM in the Agent Pool (e.g. Standard_F1)."
-  type        = string
-}
-
-variable "vnet_subnet_id" {
-  description = "The ID of a Subnet where the Kubernetes Node Pool should exist."
   type        = string
 }
