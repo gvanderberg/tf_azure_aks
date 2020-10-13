@@ -1,23 +1,3 @@
-variable "aad_client_app_id" {
-  description = "The Client ID of an Azure Active Directory Application"
-  type        = string
-}
-
-variable "aad_server_app_id" {
-  description = "The Server ID of an Azure Active Directory Application."
-  type        = string
-}
-
-variable "aad_server_app_secret" {
-  description = "The Server Secret of an Azure Active Directory Application."
-  type        = string
-}
-
-variable "aad_tenant_id" {
-  description = "The Tenant ID used for Azure Active Directory Application."
-  type        = string
-}
-
 variable "admin_username" {
   description = "The Admin Username for the Cluster."
   type        = string
@@ -25,6 +5,11 @@ variable "admin_username" {
 
 variable "admin_password" {
   description = "The Admin Password for the Cluster."
+  type        = string
+}
+
+variable "container_registry_id" {
+  description = "The ID of the Container Registry."
   type        = string
 }
 
@@ -80,6 +65,11 @@ variable "resource_group_name" {
 
 variable "service_cidr" {
   description = "The Network Range used by the Kubernetes service."
+  type        = string
+}
+
+variable "slack_username" {
+  description = "Slack Username."
   type        = string
 }
 

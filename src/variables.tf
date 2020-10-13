@@ -1,25 +1,13 @@
-variable "aad_client_app_id" {
-  default = "__aad_client_app_id__"
-}
-
-variable "aad_server_app_id" {
-  default = "__aad_server_app_id__"
-}
-
-variable "aad_server_app_secret" {
-  default = "__aad_server_app_secret__"
-}
-
-variable "aad_tenant_id" {
-  default = "__aad_tenant_id__"
-}
-
 variable "admin_password" {
   default = "__admin_password__"
 }
 
 variable "cluster_name" {
   default = "__cluster_name__"
+}
+
+variable "container_registry_id" {
+  default = "__container_registry_id__"
 }
 
 variable "dns_service_ip" {
@@ -64,6 +52,10 @@ variable "resource_group_name" {
 
 variable "service_cidr" {
   default = "__service_cidr__"
+}
+
+variable "slack_username" {
+  default = "__slack_username__"
 }
 
 variable "ssh_key_data" {

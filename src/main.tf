@@ -12,6 +12,8 @@ provider "helm" {
 
   kubernetes {
     host                   = module.aks.host
+    username               = module.aks.cluster_username
+    password               = module.aks.cluster_password
     client_certificate     = base64decode(module.aks.client_certificate)
     client_key             = base64decode(module.aks.client_key)
     cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
@@ -21,6 +23,8 @@ provider "helm" {
 provider "kubernetes" {
   version                = "~>1.13.2"
   host                   = module.aks.host
+  username               = module.aks.cluster_username
+  password               = module.aks.cluster_password
   client_certificate     = base64decode(module.aks.client_certificate)
   client_key             = base64decode(module.aks.client_key)
   cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
@@ -32,7 +36,7 @@ provider "random" {
 
 terraform {
   required_version = "~>0.12.0"
-  backend "remote" {}
+  backend "local" {}
 }
 
 module "rg" {
@@ -59,12 +63,9 @@ module "aks" {
   name                         = var.cluster_name
   location                     = module.rg.location
   resource_group_name          = module.rg.name
-  aad_client_app_id            = var.aad_client_app_id
-  aad_server_app_id            = var.aad_server_app_id
-  aad_server_app_secret        = var.aad_server_app_secret
-  aad_tenant_id                = var.aad_tenant_id
   admin_username               = "azuresupport"
   admin_password               = var.admin_password
+  container_registry_id        = var.container_registry_id
   dns_service_ip               = var.dns_service_ip
   docker_bridge_cidr           = var.docker_bridge_cidr
   kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
@@ -73,6 +74,7 @@ module "aks" {
   log_analytics_workspace_id   = module.law.id
   node_count                   = var.node_count
   service_cidr                 = var.service_cidr
+  slack_username               = var.slack_username
   ssh_key_data                 = var.ssh_key_data
   subnet_name                  = var.subnet_name
   subnet_virtual_network_name  = var.subnet_virtual_network_name

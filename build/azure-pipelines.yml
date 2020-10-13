@@ -1,19 +1,39 @@
+pr: none
+
 trigger:
-  - master
+  batch: true
+  branches:
+    include:
+    - master
 
 variables:
-- group: 'Terraform BE'
-- group: 'Terraform CLI'
-- name: location
-  value: 'southafricanorth'
-- name: tags_created_by
-  value: 'Terraform'
 - name: tags_location
-  value: '$(location)'
-- name: tf_path
-  value: '$(Pipeline.Workspace)/drop'
-- name: tf_state_key
-  value: '$(Build.BuildId)'
+  value: $(location)
+- name: tags_managed_by
+  value: vanderbergg@out.co.za
 
 stages:
-- template: terraform-stages.yml
+- template: build-stage.yml
+  parameters:
+    displayName: package scripts
+    stageName: package
+    pathtoPublish: $(Build.SourcesDirectory)/src
+
+- template: release-stage.yml
+  parameters:
+    condition: succeeded()
+    dependsOn: package
+    displayName: release dev (westeurope)
+    environment: dev (westeurope)
+    stageName: release_dev_we
+    variableTemplate: release-variables-we-dev.yml
+
+- template: terraform-stage.yml
+  parameters:
+    condition: succeeded()
+    dependsOn: package
+    displayName: destroy dev (westeurope)
+    environment: dev (westeurope)
+    stageName: destroy_dev_we
+    templateName: terraform-steps-destroy.yml
+    variableTemplate: release-variables-we-dev.yml
