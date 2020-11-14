@@ -10,7 +10,7 @@ variables:
 - name: tags_location
   value: $(location)
 - name: tags_managed_by
-  value: vanderbergg@out.co.za
+  value: $(managed_by)
 
 stages:
 - template: build-stage.yml
