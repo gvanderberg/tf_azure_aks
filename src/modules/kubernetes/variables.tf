@@ -23,6 +23,11 @@ variable "docker_bridge_cidr" {
   type        = string
 }
 
+variable "docker_config_json" {
+  description = "The base64 representation of your Docker credentials."
+  type        = string
+}
+
 variable "kubernetes_dashboard_enabled" {
   description = "Is the Kubernetes Dashboard enabled?"
   type        = string

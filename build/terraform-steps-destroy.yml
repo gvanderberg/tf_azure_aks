@@ -12,22 +12,22 @@ steps:
     tokenSuffix: __
 
 - task: TerraformInstaller@0
-  displayName: terraform install 0.12.29
+  displayName: terraform install 0.13.5
   inputs:
-    terraformVersion: 0.12.29
+    terraformVersion: 0.13.5
 
 - script: |
     set -e
 
     echo 'hostname = "app.terraform.io"' | tee -a backend.tfvars
-    echo 'organization = "outsurance"' | tee -a backend.tfvars
+    echo 'organization = "$(terraform-organization)"' | tee -a backend.tfvars
     echo 'token = "$(terraform-token)"' | tee -a backend.tfvars
     echo 'workspaces { name = "$(workspace_name)" }' | tee -a backend.tfvars
 
     # terraform init
     terraform init -no-color -input=false -backend-config="backend.tfvars"
 
-    curl --location --request PATCH "https://app.terraform.io/api/v2/organizations/outsurance/workspaces/$(workspace_name)" \
+    curl --location --request PATCH "https://app.terraform.io/api/v2/organizations/$(terraform-organization)/workspaces/$(workspace_name)" \
       --header "Content-Type: application/vnd.api+json" \
       --header "Authorization: Bearer $(terraform-token)" \
       --data-raw "{\"data\":{\"type\":\"workspaces\",\"attributes\":{\"operations\":false}}}"

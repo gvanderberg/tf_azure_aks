@@ -18,6 +18,10 @@ variable "docker_bridge_cidr" {
   default = "__docker_bridge_cidr__"
 }
 
+variable "docker_config_json" {
+  default = "__docker_config_json__"
+}
+
 variable "kubernetes_dashboard_enabled" {
   default = "__kubernetes_dashboard_enabled__"
 }
@@ -44,6 +48,10 @@ variable "log_analytics_workspace_sku" {
 
 variable "node_count" {
   default = "__node_count__"
+}
+
+variable "resource_group_create" {
+  default = "__resource_group_create__"
 }
 
 variable "resource_group_name" {

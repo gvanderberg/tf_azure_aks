@@ -1,47 +1,11 @@
-provider "azuread" {
-  version = "~>0.11.0"
-}
-
-provider "azurerm" {
-  version = "~>2.30.0"
-  features {}
-}
-
-provider "helm" {
-  version = "~>1.3.1"
-
-  kubernetes {
-    host                   = module.aks.host
-    username               = module.aks.cluster_username
-    password               = module.aks.cluster_password
-    client_certificate     = base64decode(module.aks.client_certificate)
-    client_key             = base64decode(module.aks.client_key)
-    cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
-  }
-}
-
-provider "kubernetes" {
-  version                = "~>1.13.2"
-  host                   = module.aks.host
-  username               = module.aks.cluster_username
-  password               = module.aks.cluster_password
-  client_certificate     = base64decode(module.aks.client_certificate)
-  client_key             = base64decode(module.aks.client_key)
-  cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
-}
-
-provider "random" {
-  version = "~>2.3.0"
-}
-
 terraform {
-  required_version = "~>0.12.0"
-  backend "local" {}
+  backend "remote" {}
 }
 
 module "rg" {
   source = "./modules/resource_group"
 
+  resource_group_create   = var.resource_group_create
   resource_group_name     = var.resource_group_name
   resource_group_location = var.location
   tags                    = var.tags
@@ -68,6 +32,7 @@ module "aks" {
   container_registry_id        = var.container_registry_id
   dns_service_ip               = var.dns_service_ip
   docker_bridge_cidr           = var.docker_bridge_cidr
+  docker_config_json           = var.docker_config_json
   kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
   kubernetes_version           = var.kubernetes_version
   load_balancer_ip             = var.load_balancer_ip

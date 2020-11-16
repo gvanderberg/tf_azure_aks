@@ -16,6 +16,6 @@ resource "azurerm_management_lock" "this" {
   count = var.resource_group_create ? 1 : 0
 
   name       = "can-not-delete-lock"
-  scope      = azurerm_resource_group.this.id
+  scope      = azurerm_resource_group.this[count.index].id
   lock_level = "CanNotDelete"
 }
