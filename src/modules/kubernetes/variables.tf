@@ -28,6 +28,11 @@ variable "docker_config_json" {
   type        = string
 }
 
+variable "kubernetes_cluster_name" {
+  description = "The name of the Managed Kubernetes Cluster to create."
+  type        = string
+}
+
 variable "kubernetes_dashboard_enabled" {
   description = "Is the Kubernetes Dashboard enabled?"
   type        = string
@@ -43,23 +48,18 @@ variable "load_balancer_ip" {
   type        = string
 }
 
-variable "location" {
-  description = "The location where the Managed Kubernetes Cluster should be created."
-  type        = string
-}
-
 variable "log_analytics_workspace_id" {
   description = "The ID of the Log Analytics Workspace which the OMS Agent should send data to."
   type        = string
 }
 
-variable "name" {
-  description = "The name of the Managed Kubernetes Cluster to create."
+variable "node_count" {
+  description = "Number of Agents (VMs) in the Pool. Possible values must be in the range of 1 to 100 (inclusive)."
   type        = string
 }
 
-variable "node_count" {
-  description = "Number of Agents (VMs) in the Pool. Possible values must be in the range of 1 to 100 (inclusive)."
+variable "resource_group_location" {
+  description = "The location where the Managed Kubernetes Cluster should be created."
   type        = string
 }
 

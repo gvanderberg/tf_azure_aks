@@ -18,4 +18,5 @@ resource "azurerm_management_lock" "this" {
   name       = "can-not-delete-lock"
   scope      = azurerm_resource_group.this[count.index].id
   lock_level = "CanNotDelete"
+  depends_on = [azurerm_resource_group.this]
 }

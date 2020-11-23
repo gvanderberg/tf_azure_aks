@@ -1,0 +1,32 @@
+variables:
+  - group: PreProd - Terraform CLI
+  - name: analytics_workspace_name
+    value: azlaw-prd-zn-aks
+  - name: analytics_workspace_sku
+    value: free
+  - name: container_registry_id
+    value:  
+  - name: kubernetes_cluster_name
+    value: azks-prd-zn-titansoft
+  - name: kubernetes_dashboard_enabled
+    value: true
+  - name: kubernetes_version
+    value: 1.18.10
+  - name: location
+    value: southafricanorth
+  - name: resource_group_create
+    value: true
+  - name: resource_group_name
+    value: azrg-prd-zn-titansoft
+  - name: subnet_name
+    value: azsnet-prd-zn-k8s
+  - name: subnet_resource_group_name
+    value: azrg-prd-zn-net
+  - name: subnet_virtual_network_name
+    value: aznet-prd-zn-titansoft
+  - name: tags_environment
+    value: Production
+  - name: virtual_machine_size
+    value: Standard_B2s
+  - name: workspace_name
+    value: kubernetes-zn-prd

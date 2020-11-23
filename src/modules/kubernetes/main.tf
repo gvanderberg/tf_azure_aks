@@ -5,20 +5,29 @@ data "azurerm_subnet" "this" {
 }
 
 resource "azurerm_kubernetes_cluster" "this" {
-  name                            = var.name
-  location                        = var.location
+  name                            = var.kubernetes_cluster_name
   resource_group_name             = var.resource_group_name
-  # api_server_authorized_ip_ranges = []
-  dns_prefix                      = format("%s-%s", var.name, "dns")
+  location                        = var.resource_group_location
+  api_server_authorized_ip_ranges = []
+  dns_prefix                      = format("%s-%s", var.kubernetes_cluster_name, "dns")
   kubernetes_version              = var.kubernetes_version
   node_resource_group             = format("%s-%s", var.resource_group_name, "nodes")
   private_cluster_enabled         = true
   sku_tier                        = "Free"
 
   addon_profile {
+    azure_policy {
+      enabled = false
+    }
+
+    http_application_routing {
+      enabled = false
+    }
+
     kube_dashboard {
       enabled = var.kubernetes_dashboard_enabled
     }
+
     oms_agent {
       enabled                    = true
       log_analytics_workspace_id = var.log_analytics_workspace_id
@@ -26,9 +35,9 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                  = "agentpool"
+    name                  = "default"
     enable_auto_scaling   = true
-    enable_node_public_ip = false
+    enable_node_public_ip = true
     availability_zones    = [1, 2, 3]
     max_pods              = "110"
     max_count             = var.node_count + 2
@@ -58,20 +67,16 @@ resource "azurerm_kubernetes_cluster" "this" {
   network_profile {
     network_plugin     = "azure"
     network_policy     = "azure"
-    dns_service_ip     = var.dns_service_ip
-    docker_bridge_cidr = var.docker_bridge_cidr
-    load_balancer_sku  = "Standard"
-    service_cidr       = var.service_cidr
+    # dns_service_ip     = var.dns_service_ip
+    # docker_bridge_cidr = var.docker_bridge_cidr
+    load_balancer_sku  = "standard"
+    # service_cidr       = var.service_cidr
   }
 
   role_based_access_control {
     azure_active_directory {
-      client_app_id     = var.aad_client_app_id
-      server_app_id     = var.aad_server_app_id
-      server_app_secret = var.aad_server_app_secret
-      tenant_id         = var.aad_tenant_id
+      managed = true
     }
-
     enabled = true
   }
 

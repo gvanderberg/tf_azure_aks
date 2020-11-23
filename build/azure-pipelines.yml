@@ -23,17 +23,17 @@ stages:
   parameters:
     condition: succeeded()
     dependsOn: package
-    displayName: release dev (westeurope)
-    environment: dev (westeurope)
+    displayName: release dev (southafricanorth)
+    environment: dev (southafricanorth)
     stageName: release_dev_we
-    variableTemplate: release-variables-we-dev.yml
+    variableTemplate: release-variables-zn-prd.yml
 
 - template: terraform-stage.yml
   parameters:
     condition: succeeded()
     dependsOn: package
-    displayName: destroy dev (westeurope)
-    environment: dev (westeurope)
+    displayName: destroy dev (southafricanorth)
+    environment: dev (southafricanorth)
     stageName: destroy_dev_we
     templateName: terraform-steps-destroy.yml
-    variableTemplate: release-variables-we-dev.yml
+    variableTemplate: release-variables-zn-prd.yml

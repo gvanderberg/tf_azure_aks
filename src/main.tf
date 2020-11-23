@@ -1,5 +1,5 @@
 terraform {
-  backend "remote" {}
+  backend "local" {}
 }
 
 module "rg" {
@@ -14,27 +14,27 @@ module "rg" {
 module "law" {
   source = "./modules/log_analytics"
 
-  name                = var.log_analytics_workspace_name
-  location            = module.rg.location
-  resource_group_name = module.rg.name
-  sku                 = var.log_analytics_workspace_sku
-  tags                = var.tags
+  analytics_workspace_name  = var.analytics_workspace_name
+  analytics_workspace_sku   = var.analytics_workspace_sku
+  resource_group_name       = module.rg.name
+  resource_group_location   = module.rg.location
+  tags                      = var.tags
 }
 
 module "aks" {
   source = "./modules/kubernetes"
 
-  name                         = var.cluster_name
-  location                     = module.rg.location
+  kubernetes_cluster_name      = var.kubernetes_cluster_name
+  kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
+  kubernetes_version           = var.kubernetes_version
   resource_group_name          = module.rg.name
+  resource_group_location      = module.rg.location
   admin_username               = "azuresupport"
   admin_password               = var.admin_password
   container_registry_id        = var.container_registry_id
   dns_service_ip               = var.dns_service_ip
   docker_bridge_cidr           = var.docker_bridge_cidr
   docker_config_json           = var.docker_config_json
-  kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
-  kubernetes_version           = var.kubernetes_version
   load_balancer_ip             = var.load_balancer_ip
   log_analytics_workspace_id   = module.law.id
   node_count                   = var.node_count

@@ -2,8 +2,12 @@ variable "admin_password" {
   default = "__admin_password__"
 }
 
-variable "cluster_name" {
-  default = "__cluster_name__"
+variable "analytics_workspace_name" {
+  default = "__analytics_workspace_name__"
+}
+
+variable "analytics_workspace_sku" {
+  default = "__analytics_workspace_sku__"
 }
 
 variable "container_registry_id" {
@@ -22,6 +26,10 @@ variable "docker_config_json" {
   default = "__docker_config_json__"
 }
 
+variable "kubernetes_cluster_name" {
+  default = "__kubernetes_cluster_name__"
+}
+
 variable "kubernetes_dashboard_enabled" {
   default = "__kubernetes_dashboard_enabled__"
 }
@@ -36,14 +44,6 @@ variable "load_balancer_ip" {
 
 variable "location" {
   default = "__location__"
-}
-
-variable "log_analytics_workspace_name" {
-  default = "__log_analytics_workspace_name__"
-}
-
-variable "log_analytics_workspace_sku" {
-  default = "__log_analytics_workspace_sku__"
 }
 
 variable "node_count" {
