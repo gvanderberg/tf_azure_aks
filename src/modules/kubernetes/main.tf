@@ -4,6 +4,11 @@ data "azurerm_subnet" "this" {
   resource_group_name  = var.subnet_resource_group_name
 }
 
+data "azurerm_virtual_network" "this" {
+  name                = var.subnet_virtual_network_name
+  resource_group_name = var.subnet_resource_group_name
+}
+
 resource "azurerm_kubernetes_cluster" "this" {
   name                            = var.kubernetes_cluster_name
   resource_group_name             = var.resource_group_name
@@ -36,7 +41,7 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   default_node_pool {
     name                  = "default"
-    enable_auto_scaling   = true
+    enable_auto_scaling   = false
     enable_node_public_ip = true
     availability_zones    = [1, 2, 3]
     max_pods              = "110"
@@ -75,7 +80,8 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   role_based_access_control {
     azure_active_directory {
-      managed = true
+      managed                 = true
+      admin_group_object_ids  = [data.azuread_group.this.id]
     }
     enabled = true
   }
@@ -83,53 +89,100 @@ resource "azurerm_kubernetes_cluster" "this" {
   tags = var.tags
 }
 
+resource "azurerm_role_assignment" "aks" {
+  scope                = azurerm_kubernetes_cluster.this.id
+  role_definition_name = "Monitoring Metrics Publisher"
+  principal_id         = azurerm_kubernetes_cluster.this.addon_profile[0].oms_agent[0].oms_agent_identity[0].object_id
+
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
+
+resource "azurerm_role_assignment" "net" {
+  scope                = data.azurerm_virtual_network.this.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.this.identity[0].principal_id
+
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
+
+resource "azurerm_role_assignment" "acr" {
+  scope                = var.container_registry_id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_kubernetes_cluster.this.kubelet_identity[0].object_id
+
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
+
+# resource "kubernetes_namespace" "ingress-system" {
+#   metadata {
+#     name = "ingress-system"
+#   }
+# }
+
+# resource "kubernetes_secret" "ingress-system-docker-config" {
+#   metadata {
+#     name      = "ingress-system-docker-config"
+#     namespace = "ingress-system"
+#   }
+
+#   data = {
+#     ".dockerconfigjson" = var.docker_config_json
+#   }
+
+#   type = "kubernetes.io/dockerconfigjson"
+# }
+
 resource "helm_release" "ingress_nginx" {
   name             = "ingress-nginx"
   repository       = "https://kubernetes.github.io/ingress-nginx"
-  chart            = "ingress-nginx/ingress-nginx"
+  chart            = "ingress-nginx"
   create_namespace = true
+  max_history      = "3"
   namespace        = "ingress-system"
   version          = "3.4.0"
 
-  set {
-    name  = "controller.image.tag"
-    value = "0.40.2"
-  }
+  values = [<<EOF
+controller:
+  image:
+    tag: v0.40.0
+  service:
+    # annotations:
+    #   beta.kubernetes.io/azure-load-balancer-internal: "true"
+    loadBalancerIP: ${var.load_balancer_ip}
+    type: LoadBalancer
+rbac:
+  create: true
+EOF
+  ]
 
-  set {
-    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal\""
-    value = "true"
-  }
-
-  set {
-    name  = "controller.service.loadBalancerIP"
-    value = var.load_balancer_ip
-  }
-
-  set {
-    name  = "controller.service.type"
-    value = "LoadBalancer"
-  }
-
-  set {
-    name  = "rbac.create"
-    value = "true"
-  }
-
-  depends_on = [azurerm_kubernetes_cluster.this]
+  depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net]
 }
 
-resource "helm_release" "kured" {
-  name       = "kured"
-  repository = "https://weaveworks.github.io/kured"
-  chart      = "kured/kured"
-  namespace  = "kube-system"
-  version    = "2.2.0"
+# resource "helm_release" "kured" {
+#   name        = "kured"
+#   repository  = "https://weaveworks.github.io/kured"
+#   chart       = "kured"
+#   max_history = "3"
+#   namespace   = "kube-system"
+#   version     = "2.2.0"
 
-  set {
-    name  = "image.tag"
-    value = "1.5.0"
-  }
+#   values = [<<EOF
+# extraArgs:
+#   slack-channel: ${var.slack_channel}
+#   slack-hook-url: ${var.slack_url}
+#   slack-username: ${var.slack_username}
+#   time-zone: Africa/Johannesburg
+#   start-time: 00:00
+#   end-time: 05:00
+# image:
+#   tag: 1.5.0
+# resources:
+#   limits:
+#     cpu: 20m
+#   requests:
+#     cpu: 5m
+# EOF
+#   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this]
-}
+#   depends_on = [azurerm_kubernetes_cluster.this]
+# }
