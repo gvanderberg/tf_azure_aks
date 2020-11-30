@@ -7,7 +7,7 @@ variables:
   - name: analytics_workspace_sku
     value: free
   - name: container_registry_id
-    value:  
+    value: $(container-registry-id)
   - name: dns_service_ip
     value: "10.50.0.10"
   - name: docker_bridge_cidr
