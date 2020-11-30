@@ -45,8 +45,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     enable_node_public_ip = true
     availability_zones    = [1, 2, 3]
     max_pods              = "110"
-    max_count             = var.node_count + 2
-    min_count             = var.node_count
+    # max_count             = var.node_count + 2
+    # min_count             = var.node_count
     node_count            = var.node_count
     type                  = "VirtualMachineScaleSets"
     vm_size               = var.vm_size
