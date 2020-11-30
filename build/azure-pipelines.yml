@@ -23,7 +23,7 @@ stages:
   parameters:
     condition: succeeded()
     dependsOn: package
-    displayName: release dev (southafricanorth)
+    displayName: release development
     environment: dev (southafricanorth)
     stageName: release_dev_we
     variableTemplate: release-variables-zn-prd.yml
@@ -32,7 +32,7 @@ stages:
   parameters:
     condition: succeeded()
     dependsOn: package
-    displayName: destroy dev (southafricanorth)
+    displayName: destroy development
     environment: dev (southafricanorth)
     stageName: destroy_dev_we
     templateName: terraform-steps-destroy.yml
