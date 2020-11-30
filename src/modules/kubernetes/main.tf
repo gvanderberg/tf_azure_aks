@@ -17,7 +17,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   dns_prefix                      = format("%s-%s", var.kubernetes_cluster_name, "dns")
   kubernetes_version              = var.kubernetes_version
   node_resource_group             = format("%s-%s", var.resource_group_name, "nodes")
-  private_cluster_enabled         = true
+  private_cluster_enabled         = false
   sku_tier                        = "Free"
 
   addon_profile {
@@ -40,7 +40,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                  = "default"
+    name                  = "agentpool"
     enable_auto_scaling   = false
     enable_node_public_ip = false
     # availability_zones    = [1, 2, 3]
