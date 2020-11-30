@@ -8,6 +8,10 @@ variables:
     value: free
   - name: container_registry_id
     value:  
+  - name: dns_service_ip
+    value: "10.50.0.10"
+  - name: docker_bridge_cidr
+    value: 172.17.0.1/16
   - name: kubernetes_cluster_name
     value: azks-prd-zn-titansoft
   - name: kubernetes_dashboard_enabled
