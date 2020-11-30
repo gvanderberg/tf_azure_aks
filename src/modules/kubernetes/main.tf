@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   api_server_authorized_ip_ranges = []
   dns_prefix                      = format("%s-%s", var.kubernetes_cluster_name, "dns")
   kubernetes_version              = var.kubernetes_version
-  node_resource_group             = format("%s-%s", var.resource_group_name, "nodes")
+  node_resource_group             = format("%s-%s", var.resource_group_name, "aks-nodes")
   private_cluster_enabled         = false
   sku_tier                        = "Free"
 
@@ -148,7 +148,7 @@ controller:
   service:
     # annotations:
     #   beta.kubernetes.io/azure-load-balancer-internal: "true"
-    loadBalancerIP: ${var.load_balancer_ip}
+    # loadBalancerIP: ${var.load_balancer_ip}
     type: LoadBalancer
 rbac:
   create: true
