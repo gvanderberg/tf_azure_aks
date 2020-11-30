@@ -42,7 +42,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   default_node_pool {
     name                  = "default"
     enable_auto_scaling   = false
-    enable_node_public_ip = true
+    enable_node_public_ip = false
     availability_zones    = [1, 2, 3]
     max_pods              = "110"
     # max_count             = var.node_count + 2
