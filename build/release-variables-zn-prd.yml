@@ -22,6 +22,8 @@ variables:
     value: false
   - name: resource_group_name
     value: azrg-prd-zn-titansoft
+  - name: ssh_key_data
+    value: $(ssh-key-data)
   - name: subnet_name
     value: azsnet-prd-zn-k8s
   - name: subnet_resource_group_name
