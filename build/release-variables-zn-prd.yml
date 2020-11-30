@@ -1,5 +1,5 @@
 variables:
-  - group: PreProd - Terraform CLI
+  - group: Terraform CLI
   - name: analytics_workspace_name
     value: azlaw-prd-zn-aks
   - name: analytics_workspace_sku
