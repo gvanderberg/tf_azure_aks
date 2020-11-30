@@ -23,7 +23,7 @@ variables:
   - name: resource_group_name
     value: azrg-prd-zn-titansoft
   - name: service_cidr
-    value: 10.10.0.0/16
+    value: 10.50.0.0/16
   - name: ssh_key_data
     value: $(ssh-key-data)
   - name: subnet_name
