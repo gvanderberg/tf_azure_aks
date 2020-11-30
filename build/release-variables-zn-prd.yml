@@ -1,5 +1,7 @@
 variables:
   - group: Terraform CLI
+  - name: admin_password
+    value: $(admin-password)
   - name: analytics_workspace_name
     value: azlaw-prd-zn-aks
   - name: analytics_workspace_sku
@@ -9,13 +11,15 @@ variables:
   - name: kubernetes_cluster_name
     value: azks-prd-zn-titansoft
   - name: kubernetes_dashboard_enabled
-    value: true
+    value: false
   - name: kubernetes_version
     value: 1.18.10
   - name: location
     value: southafricanorth
+  - name: node_count
+    value: 1
   - name: resource_group_create
-    value: true
+    value: false
   - name: resource_group_name
     value: azrg-prd-zn-titansoft
   - name: subnet_name
@@ -29,4 +33,4 @@ variables:
   - name: virtual_machine_size
     value: Standard_B2s
   - name: workspace_name
-    value: kubernetes-zn-prd
+    value: tf_azure_ks-zn-prd

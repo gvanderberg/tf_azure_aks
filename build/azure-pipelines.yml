@@ -10,7 +10,7 @@ variables:
 - name: tags_location
   value: $(location)
 - name: tags_managed_by
-  value: $(managed_by)
+  value: $(managed-by)
 
 stages:
 - template: build-stage.yml
@@ -23,17 +23,17 @@ stages:
   parameters:
     condition: succeeded()
     dependsOn: package
-    displayName: release development
-    environment: dev (southafricanorth)
-    stageName: release_dev_we
+    displayName: release production
+    environment: prod (southafricanorth)
+    stageName: release_prd_we
     variableTemplate: release-variables-zn-prd.yml
 
 - template: terraform-stage.yml
   parameters:
     condition: succeeded()
     dependsOn: package
-    displayName: destroy development
-    environment: dev (southafricanorth)
-    stageName: destroy_dev_we
+    displayName: destroy production
+    environment: prod (southafricanorth)
+    stageName: destroy_prd_we
     templateName: terraform-steps-destroy.yml
     variableTemplate: release-variables-zn-prd.yml
