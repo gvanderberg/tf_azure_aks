@@ -113,11 +113,11 @@ resource "azurerm_role_assignment" "acr" {
   depends_on = [azurerm_kubernetes_cluster.this]
 }
 
-resource "kubernetes_namespace" "ingress-system" {
-  metadata {
-    name = "ingress-system"
-  }
-}
+# resource "kubernetes_namespace" "ingress-system" {
+#   metadata {
+#     name = "ingress-system"
+#   }
+# }
 
 # resource "kubernetes_secret" "ingress-system-docker-config" {
 #   metadata {
@@ -158,11 +158,11 @@ resource "kubernetes_namespace" "ingress-system" {
 #   depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net]
 # }
 
-resource "kubernetes_namespace" "kured-system" {
-  metadata {
-    name = "kured-system"
-  }
-}
+# resource "kubernetes_namespace" "kured-system" {
+#   metadata {
+#     name = "kured-system"
+#   }
+# }
 
 # resource "helm_release" "kured" {
 #   name        = "kured"
