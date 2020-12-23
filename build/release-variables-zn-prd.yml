@@ -3,7 +3,7 @@ variables:
   - name: admin_password
     value: $(admin-password)
   - name: analytics_workspace_name
-    value: azlaw-prd-zn-aks
+    value: azlaw-prd-zn-titansoft
   - name: analytics_workspace_sku
     value: free
   - name: container_registry_id

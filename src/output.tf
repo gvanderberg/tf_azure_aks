@@ -1,21 +1,25 @@
-output "client_key" {
-  value = module.aks.client_key
-}
-
 output "client_certificate" {
   value = module.aks.client_certificate
+}
+
+output "client_key" {
+  value = module.aks.client_key
 }
 
 output "cluster_ca_certificate" {
   value = module.aks.cluster_ca_certificate
 }
 
+output "cluster_password" {
+  value = module.aks.cluster_password
+}
+
 output "cluster_username" {
   value = module.aks.cluster_username
 }
 
-output "cluster_password" {
-  value = module.aks.cluster_password
+output "host" {
+  value = module.aks.host
 }
 
 output "kube_config" {
