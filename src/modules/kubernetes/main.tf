@@ -132,31 +132,31 @@ resource "azurerm_role_assignment" "acr" {
 #   type = "kubernetes.io/dockerconfigjson"
 # }
 
-resource "helm_release" "ingress_nginx" {
-  name             = "ingress-nginx"
-  repository       = "https://kubernetes.github.io/ingress-nginx"
-  chart            = "ingress-nginx"
-  create_namespace = true
-  max_history      = "3"
-  namespace        = "ingress-system"
-  version          = "3.4.0"
+# resource "helm_release" "ingress_nginx" {
+#   name             = "ingress-nginx"
+#   repository       = "https://kubernetes.github.io/ingress-nginx"
+#   chart            = "ingress-nginx"
+#   create_namespace = true
+#   max_history      = "3"
+#   namespace        = "ingress-system"
+#   version          = "3.4.0"
 
-  values = [<<EOF
-controller:
-  image:
-    tag: v0.40.0
-  service:
-    # annotations:
-    #   beta.kubernetes.io/azure-load-balancer-internal: "true"
-    # loadBalancerIP: ${var.load_balancer_ip}
-    type: LoadBalancer
-rbac:
-  create: true
-EOF
-  ]
+#   values = [<<EOF
+# controller:
+#   image:
+#     tag: v0.40.0
+#   service:
+#     # annotations:
+#     #   beta.kubernetes.io/azure-load-balancer-internal: "true"
+#     # loadBalancerIP: ${var.load_balancer_ip}
+#     type: LoadBalancer
+# rbac:
+#   create: true
+# EOF
+#   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net]
-}
+#   depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net]
+# }
 
 # resource "helm_release" "kured" {
 #   name        = "kured"
