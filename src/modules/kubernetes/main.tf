@@ -1,3 +1,7 @@
+data "azuread_group" "this" {
+  name = "K8S Administrators Security Group"
+}
+
 data "azurerm_subnet" "this" {
   name                 = var.subnet_name
   virtual_network_name = var.subnet_virtual_network_name
@@ -81,7 +85,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   role_based_access_control {
     azure_active_directory {
       managed                 = true
-      # admin_group_object_ids  = [data.azuread_group.this.id]
+      admin_group_object_ids  = [data.azuread_group.this.id]
     }
     enabled = true
   }
