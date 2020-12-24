@@ -12,9 +12,9 @@ steps:
       tokenSuffix: __
 
   - task: TerraformInstaller@0
-    displayName: terraform install 0.13.5
+    displayName: terraform install $(terraform_version)
     inputs:
-      terraformVersion: 0.13.5
+      terraformVersion: $(terraform_version)
 
   - script: |
       set -e

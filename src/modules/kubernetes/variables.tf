@@ -33,11 +33,6 @@ variable "kubernetes_cluster_name" {
   type        = string
 }
 
-variable "kubernetes_dashboard_enabled" {
-  description = "Is the Kubernetes Dashboard enabled?"
-  type        = string
-}
-
 variable "kubernetes_version" {
   description = "Version of Kubernetes specified when creating the AKS managed cluster."
   type        = string

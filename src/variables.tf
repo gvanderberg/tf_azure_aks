@@ -30,10 +30,6 @@ variable "kubernetes_cluster_name" {
   default = "__kubernetes_cluster_name__"
 }
 
-variable "kubernetes_dashboard_enabled" {
-  default = "__kubernetes_dashboard_enabled__"
-}
-
 variable "kubernetes_version" {
   default = "__kubernetes_version__"
 }

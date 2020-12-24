@@ -34,7 +34,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
 
     kube_dashboard {
-      enabled = var.kubernetes_dashboard_enabled
+      enabled = false
     }
 
     oms_agent {
@@ -117,11 +117,11 @@ resource "azurerm_role_assignment" "acr" {
   depends_on = [azurerm_kubernetes_cluster.this]
 }
 
-# resource "kubernetes_namespace" "ingress-system" {
-#   metadata {
-#     name = "ingress-system"
-#   }
-# }
+resource "kubernetes_namespace" "ingress-system" {
+  metadata {
+    name = "ingress-system"
+  }
+}
 
 # resource "kubernetes_secret" "ingress-system-docker-config" {
 #   metadata {

@@ -25,7 +25,6 @@ module "aks" {
   source = "./modules/kubernetes"
 
   kubernetes_cluster_name      = var.kubernetes_cluster_name
-  kubernetes_dashboard_enabled = var.kubernetes_dashboard_enabled
   kubernetes_version           = var.kubernetes_version
   resource_group_name          = module.rg.name
   resource_group_location      = module.rg.location

@@ -14,8 +14,6 @@ variables:
     value: 172.17.0.1/16
   - name: kubernetes_cluster_name
     value: azks-prd-zn-titansoft
-  - name: kubernetes_dashboard_enabled
-    value: false
   - name: kubernetes_version
     value: 1.18.10
   - name: location
@@ -38,6 +36,8 @@ variables:
     value: aznet-prd-zn-titansoft
   - name: tags_environment
     value: Production
+  - name: terraform_version
+    value: 0.13.5
   - name: virtual_machine_size
     value: Standard_B2s
   - name: workspace_name
