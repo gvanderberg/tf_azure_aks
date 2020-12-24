@@ -201,11 +201,6 @@ resource "helm_release" "cert_manager" {
   values = [<<EOF
 installCRDs: true
 nodeSelector."beta\.kubernetes\.io/os": linux
-resources:
-  limits:
-    cpu: 20m
-  requests:
-    cpu: 5m
 EOF
   ]
 
