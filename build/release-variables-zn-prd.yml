@@ -37,7 +37,7 @@ variables:
   - name: tags_environment
     value: Production
   - name: terraform_version
-    value: 0.13.5
+    value: 0.14.3
   - name: virtual_machine_size
     value: Standard_B2s
   - name: workspace_name
