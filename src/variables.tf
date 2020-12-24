@@ -78,6 +78,10 @@ variable "subnet_resource_group_name" {
   default = "__subnet_resource_group_name__"
 }
 
+variable "support_email_address" {
+  default = "__support_email_address__"
+}
+
 variable "virtual_machine_size" {
   default = "__virtual_machine_size__"
 }

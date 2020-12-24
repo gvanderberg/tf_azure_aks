@@ -93,6 +93,10 @@ variable "subnet_resource_group_name" {
   type        = string
 }
 
+variable "support_email_address" {
+  type        = string
+}
+
 variable "tags" {
   description = "A mapping of tags to assign to the resource"
   type        = map
