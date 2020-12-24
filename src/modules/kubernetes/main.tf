@@ -135,10 +135,8 @@ resource "helm_release" "ingress_nginx" {
 controller:
   image:
     tag: v0.40.0
+  replicaCount: 2
   service:
-    # annotations:
-    #   beta.kubernetes.io/azure-load-balancer-internal: "true"
-    # loadBalancerIP: ${var.load_balancer_ip}
     type: LoadBalancer
 rbac:
   create: true
@@ -164,9 +162,6 @@ resource "helm_release" "kured" {
 
   values = [<<EOF
 extraArgs:
-  # slack-channel: ${var.slack_channel}
-  # slack-hook-url: ${var.slack_url}
-  # slack-username: ${var.slack_username}
   time-zone: Africa/Johannesburg
   start-time: 00:00
   end-time: 05:00
