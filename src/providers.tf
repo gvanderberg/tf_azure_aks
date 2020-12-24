@@ -23,7 +23,6 @@ provider "kubernetes" {
 }
 
 provider "kubernetes-alpha" {
-  load_config_file       = "false"
   host                   = module.aks.host
   client_certificate     = base64decode(module.aks.client_certificate)
   client_key             = base64decode(module.aks.client_key)
