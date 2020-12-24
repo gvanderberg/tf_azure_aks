@@ -124,6 +124,8 @@ resource "kubernetes_namespace" "ingress_system" {
       "cert-manager.io/disable-validation" = true
     }
   }
+
+  depends_on = [azurerm_kubernetes_cluster.this]
 }
 
 resource "helm_release" "ingress_nginx" {
@@ -149,13 +151,15 @@ rbac:
 EOF
   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net, kubernetes_namespace.ingress_system]
+  depends_on = [azurerm_role_assignment.net, kubernetes_namespace.ingress_system]
 }
 
 resource "kubernetes_namespace" "kured_system" {
   metadata {
     name = "kured-system"
   }
+
+  depends_on = [azurerm_kubernetes_cluster.this]
 }
 
 resource "helm_release" "kured" {
@@ -181,13 +185,15 @@ resources:
 EOF
   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this, kubernetes_namespace.kured_system]
+  depends_on = [kubernetes_namespace.kured_system]
 }
 
 resource "kubernetes_namespace" "certificate_system" {
   metadata {
     name = "certificate-system"
   }
+
+  depends_on = [azurerm_kubernetes_cluster.this]
 }
 
 resource "helm_release" "cert_manager" {
@@ -204,5 +210,44 @@ nodeSelector."beta\.kubernetes\.io/os": linux
 EOF
   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this, kubernetes_namespace.certificate_system]
+  depends_on = [kubernetes_namespace.certificate_system]
+}
+
+resource "kubernetes_manifest" "cluster-issuer" {
+  provider = kubernetes-alpha
+
+  manifest = {
+    apiVersion: "cert-manager.io/v1alpha2",
+    kind: "ClusterIssuer",
+    metadata: {
+      name: "letsencrypt"
+    },
+    spec: {
+      acme: {
+        server: "https://acme-v02.api.letsencrypt.org/directory",
+        email: "MY_EMAIL_ADDRESS",
+        privateKeySecretRef: {
+          name: "letsencrypt"
+        },
+        solvers: [
+          {
+            http01: {
+              ingress: {
+                class: "nginx",
+                podTemplate: {
+                  spec: {
+                    nodeSelector: {
+                      "kubernetes.io/os": "linux"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+
+  depends_on = [helm_release.cert_manager]
 }
