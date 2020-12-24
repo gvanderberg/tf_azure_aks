@@ -123,76 +123,62 @@ resource "kubernetes_namespace" "ingress-system" {
   }
 }
 
-# resource "kubernetes_secret" "ingress-system-docker-config" {
-#   metadata {
-#     name      = "ingress-system-docker-config"
-#     namespace = "ingress-system"
-#   }
+resource "helm_release" "ingress_nginx" {
+  name             = "ingress-nginx"
+  repository       = "https://kubernetes.github.io/ingress-nginx"
+  chart            = "ingress-nginx"
+  max_history      = "3"
+  namespace        = "ingress-system"
+  version          = "3.4.0"
 
-#   data = {
-#     ".dockerconfigjson" = var.docker_config_json
-#   }
+  values = [<<EOF
+controller:
+  image:
+    tag: v0.40.0
+  service:
+    # annotations:
+    #   beta.kubernetes.io/azure-load-balancer-internal: "true"
+    # loadBalancerIP: ${var.load_balancer_ip}
+    type: LoadBalancer
+rbac:
+  create: true
+EOF
+  ]
 
-#   type = "kubernetes.io/dockerconfigjson"
-# }
+  depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net]
+}
 
-# resource "helm_release" "ingress_nginx" {
-#   name             = "ingress-nginx"
-#   repository       = "https://kubernetes.github.io/ingress-nginx"
-#   chart            = "ingress-nginx"
-#   create_namespace = true
-#   max_history      = "3"
-#   namespace        = "ingress-system"
-#   version          = "3.4.0"
+resource "kubernetes_namespace" "kured-system" {
+  metadata {
+    name = "kured-system"
+  }
+}
 
-#   values = [<<EOF
-# controller:
-#   image:
-#     tag: v0.40.0
-#   service:
-#     # annotations:
-#     #   beta.kubernetes.io/azure-load-balancer-internal: "true"
-#     # loadBalancerIP: ${var.load_balancer_ip}
-#     type: LoadBalancer
-# rbac:
-#   create: true
-# EOF
-#   ]
+resource "helm_release" "kured" {
+  name        = "kured"
+  repository  = "https://weaveworks.github.io/kured"
+  chart       = "kured"
+  max_history = "3"
+  namespace   = "kube-system"
+  version     = "2.2.0"
 
-#   depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net]
-# }
+  values = [<<EOF
+extraArgs:
+  # slack-channel: ${var.slack_channel}
+  # slack-hook-url: ${var.slack_url}
+  # slack-username: ${var.slack_username}
+  time-zone: Africa/Johannesburg
+  start-time: 00:00
+  end-time: 05:00
+image:
+  tag: 1.5.0
+resources:
+  limits:
+    cpu: 20m
+  requests:
+    cpu: 5m
+EOF
+  ]
 
-# resource "kubernetes_namespace" "kured-system" {
-#   metadata {
-#     name = "kured-system"
-#   }
-# }
-
-# resource "helm_release" "kured" {
-#   name        = "kured"
-#   repository  = "https://weaveworks.github.io/kured"
-#   chart       = "kured"
-#   max_history = "3"
-#   namespace   = "kube-system"
-#   version     = "2.2.0"
-
-#   values = [<<EOF
-# extraArgs:
-#   slack-channel: ${var.slack_channel}
-#   slack-hook-url: ${var.slack_url}
-#   slack-username: ${var.slack_username}
-#   time-zone: Africa/Johannesburg
-#   start-time: 00:00
-#   end-time: 05:00
-# image:
-#   tag: 1.5.0
-# resources:
-#   limits:
-#     cpu: 20m
-#   requests:
-#     cpu: 5m
-# EOF
-#   ]
-
-#   depends_on = [azurerm_kubernetes_cluster.this]
-# }
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
