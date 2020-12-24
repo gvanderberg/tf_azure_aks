@@ -26,7 +26,7 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   addon_profile {
     azure_policy {
-      enabled = false
+      enabled = true
     }
 
     http_application_routing {
