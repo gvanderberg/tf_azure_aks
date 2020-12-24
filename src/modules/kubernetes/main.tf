@@ -131,7 +131,7 @@ resource "helm_release" "ingress_nginx" {
   repository       = "https://kubernetes.github.io/ingress-nginx"
   chart            = "ingress-nginx"
   max_history      = "3"
-  namespace        = "ingress-system"
+  namespace        = kubernetes_namespace.ingress_system.name
   version          = "3.4.0"
 
   values = [<<EOF
@@ -163,7 +163,7 @@ resource "helm_release" "kured" {
   repository  = "https://weaveworks.github.io/kured"
   chart       = "kured"
   max_history = "3"
-  namespace   = "kured-system"
+  namespace   = kubernetes_namespace.kured_system.name
   version     = "2.2.0"
 
   values = [<<EOF
@@ -184,18 +184,18 @@ EOF
   depends_on = [azurerm_kubernetes_cluster.this, kubernetes_namespace.kured_system]
 }
 
-resource "kubernetes_namespace" "cert_manager_system" {
+resource "kubernetes_namespace" "certificate_system" {
   metadata {
-    name = "cert-manager-system"
+    name = "certificate-system"
   }
 }
 
-resource "helm_release" "cert-manager" {
+resource "helm_release" "cert_manager" {
   name        = "cert-manager"
   repository  = "https://charts.jetstack.io"
   chart       = "cert-manager"
   max_history = "3"
-  namespace   = "cert-manager-system"
+  namespace   = kubernetes_namespace.certificate_system.name
   version     = "0.16.1"
 
   values = [<<EOF
