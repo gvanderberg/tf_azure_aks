@@ -6,6 +6,7 @@ provider "azurerm" {
 
 provider "helm" {
   kubernetes {
+    load_config_file       = "false"
     host                   = module.aks.host
     # username               = module.aks.cluster_username
     # password               = module.aks.cluster_password
