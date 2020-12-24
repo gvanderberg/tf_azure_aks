@@ -204,5 +204,5 @@ nodeSelector."beta\.kubernetes\.io/os": linux
 EOF
   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this, kubernetes_namespace.cert_manager_system]
+  depends_on = [azurerm_kubernetes_cluster.this, kubernetes_namespace.certificate_system]
 }
