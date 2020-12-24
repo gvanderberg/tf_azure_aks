@@ -117,7 +117,7 @@ resource "azurerm_role_assignment" "acr" {
   depends_on = [azurerm_kubernetes_cluster.this]
 }
 
-resource "kubernetes_namespace" "ingress-system" {
+resource "kubernetes_namespace" "ingress_system" {
   metadata {
     name = "ingress-system"
     labels ={
@@ -149,10 +149,10 @@ rbac:
 EOF
   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net]
+  depends_on = [azurerm_kubernetes_cluster.this, azurerm_role_assignment.net, kubernetes_namespace.ingress_system]
 }
 
-resource "kubernetes_namespace" "kured-system" {
+resource "kubernetes_namespace" "kured_system" {
   metadata {
     name = "kured-system"
   }
@@ -181,10 +181,10 @@ resources:
 EOF
   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this]
+  depends_on = [azurerm_kubernetes_cluster.this, kubernetes_namespace.kured_system]
 }
 
-resource "kubernetes_namespace" "cert-manager-system" {
+resource "kubernetes_namespace" "cert_manager_system" {
   metadata {
     name = "cert-manager-system"
   }
@@ -209,5 +209,5 @@ resources:
 EOF
   ]
 
-  depends_on = [azurerm_kubernetes_cluster.this]
+  depends_on = [azurerm_kubernetes_cluster.this, kubernetes_namespace.cert_manager_system]
 }
