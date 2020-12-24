@@ -35,8 +35,8 @@ steps:
       # terraform apply
       terraform apply -auto-approve -no-color -input=false
 
-      # fqdn=$(terraform output traffic_manager_profile_fqdn)
-      # echo "##vso[task.setvariable variable=fqdn;isOutput=true]$fqdn"
+      host=$(terraform output host)
+      echo "##vso[task.setvariable variable=host;isOutput=true]$host"
     displayName: terraform apply
     name: terraformApply
     env:

@@ -1,22 +1,22 @@
 parameters:
-- name: displayName
-  type: string
-- name: pathtoPublish
-  type: string
-- name: stageName
-  type: string
+  - name: displayName
+    type: string
+  - name: pathtoPublish
+    type: string
+  - name: stageName
+    type: string
 
 stages:
-- stage: ${{ parameters.stageName }}
-  displayName: ${{ parameters.displayName }}
-  pool:
-    vmImage: ubuntu-latest
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    pool:
+      vmImage: ubuntu-latest
 
-  jobs:
-  - job: build
-    displayName: build job
+    jobs:
+      - job: build
+        displayName: build job
 
-    steps:
-    - template: build-steps.yml
-      parameters:
-        pathtoPublish: ${{ parameters.pathtoPublish }}
+        steps:
+          - template: build-steps.yml
+            parameters:
+              pathtoPublish: ${{ parameters.pathtoPublish }}

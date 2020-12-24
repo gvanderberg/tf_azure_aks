@@ -4,36 +4,36 @@ trigger:
   batch: true
   branches:
     include:
-    - master
+      - master
 
 variables:
-- name: tags_location
-  value: $(location)
-- name: tags_managed_by
-  value: $(managed-by)
+  - name: tags_location
+    value: $(location)
+  - name: tags_managed_by
+    value: $(managed-by)
 
 stages:
-- template: build-stage.yml
-  parameters:
-    displayName: package scripts
-    stageName: package
-    pathtoPublish: $(Build.SourcesDirectory)/src
+  - template: build-stage.yml
+    parameters:
+      displayName: package scripts
+      stageName: package
+      pathtoPublish: $(Build.SourcesDirectory)/src
 
-- template: release-stage.yml
-  parameters:
-    condition: succeeded()
-    dependsOn: package
-    displayName: release production
-    environment: prod (southafricanorth)
-    stageName: release_prd_we
-    variableTemplate: release-variables-zn-prd.yml
+  - template: release-stage.yml
+    parameters:
+      condition: succeeded()
+      dependsOn: package
+      displayName: release production
+      environment: prod (southafricanorth)
+      stageName: release_prd_we
+      variableTemplate: release-variables-zn-prd.yml
 
-- template: terraform-stage.yml
-  parameters:
-    condition: succeeded()
-    dependsOn: package
-    displayName: destroy production
-    environment: prod (southafricanorth)
-    stageName: destroy_prd_we
-    templateName: terraform-steps-destroy.yml
-    variableTemplate: release-variables-zn-prd.yml
+  - template: terraform-stage.yml
+    parameters:
+      condition: succeeded()
+      dependsOn: package
+      displayName: destroy production
+      environment: prod (southafricanorth)
+      stageName: destroy_prd_we
+      templateName: terraform-steps-destroy.yml
+      variableTemplate: release-variables-zn-prd.yml
