@@ -131,7 +131,7 @@ resource "helm_release" "ingress_nginx" {
   repository       = "https://kubernetes.github.io/ingress-nginx"
   chart            = "ingress-nginx"
   max_history      = "3"
-  namespace        = kubernetes_namespace.ingress_system.name
+  namespace        = kubernetes_namespace.ingress_system.metadata.name
   version          = "3.4.0"
 
   values = [<<EOF
@@ -163,7 +163,7 @@ resource "helm_release" "kured" {
   repository  = "https://weaveworks.github.io/kured"
   chart       = "kured"
   max_history = "3"
-  namespace   = kubernetes_namespace.kured_system.name
+  namespace   = kubernetes_namespace.kured_system.metadata.name
   version     = "2.2.0"
 
   values = [<<EOF
@@ -195,7 +195,7 @@ resource "helm_release" "cert_manager" {
   repository  = "https://charts.jetstack.io"
   chart       = "cert-manager"
   max_history = "3"
-  namespace   = kubernetes_namespace.certificate_system.name
+  namespace   = kubernetes_namespace.certificate_system.metadata.name
   version     = "0.16.1"
 
   values = [<<EOF
