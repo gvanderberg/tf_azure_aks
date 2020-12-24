@@ -138,14 +138,12 @@ resource "helm_release" "ingress_nginx" {
 controller:
   image:
     tag: v0.40.0
-  nodeSelector:
-    "beta\.kubernetes\.io/os": linux
+  nodeSelector."beta\.kubernetes\.io/os": linux
   replicaCount: 2
   service:
     type: LoadBalancer
 defaultBackend:
-  nodeSelector:
-    "beta\.kubernetes\.io/os": linux
+  nodeSelector."beta\.kubernetes\.io/os": linux
 rbac:
   create: true
 EOF
@@ -202,8 +200,7 @@ resource "helm_release" "cert-manager" {
 
   values = [<<EOF
 installCRDs: true
-nodeSelector:
-  "beta\.kubernetes\.io/os": linux
+nodeSelector."beta\.kubernetes\.io/os": linux
 resources:
   limits:
     cpu: 20m
