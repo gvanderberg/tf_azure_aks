@@ -120,8 +120,8 @@ resource "azurerm_role_assignment" "acr" {
 resource "kubernetes_namespace" "ingress_system" {
   metadata {
     name = "ingress-system"
-    labels ={
-      "cert-manager.io/disable-validation"=true
+    labels = {
+      "cert-manager.io/disable-validation" = true
     }
   }
 }
