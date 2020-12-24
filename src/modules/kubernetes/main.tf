@@ -120,6 +120,9 @@ resource "azurerm_role_assignment" "acr" {
 resource "kubernetes_namespace" "ingress-system" {
   metadata {
     name = "ingress-system"
+    labels ={
+      "cert-manager.io/disable-validation"=true
+    }
   }
 }
 
@@ -135,9 +138,12 @@ resource "helm_release" "ingress_nginx" {
 controller:
   image:
     tag: v0.40.0
+  nodeSelector."beta\.kubernetes\.io/os"=linux
   replicaCount: 2
   service:
     type: LoadBalancer
+defaultBackend:
+  nodeSelector."beta\.kubernetes\.io/os"=linux
 rbac:
   create: true
 EOF
@@ -157,7 +163,7 @@ resource "helm_release" "kured" {
   repository  = "https://weaveworks.github.io/kured"
   chart       = "kured"
   max_history = "3"
-  namespace   = "kube-system"
+  namespace   = "kured-system"
   version     = "2.2.0"
 
   values = [<<EOF
@@ -167,6 +173,34 @@ extraArgs:
   end-time: 05:00
 image:
   tag: 1.5.0
+resources:
+  limits:
+    cpu: 20m
+  requests:
+    cpu: 5m
+EOF
+  ]
+
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
+
+resource "kubernetes_namespace" "cert-manager-system" {
+  metadata {
+    name = "cert-manager-system"
+  }
+}
+
+resource "helm_release" "cert-manager" {
+  name        = "cert-manager"
+  repository  = "https://charts.jetstack.io"
+  chart       = "cert-manager"
+  max_history = "3"
+  namespace   = "cert-manager-system"
+  version     = "0.16.1"
+
+  values = [<<EOF
+installCRDs=true
+nodeSelector."beta\.kubernetes\.io/os"=linux
 resources:
   limits:
     cpu: 20m
