@@ -117,7 +117,7 @@ resource "azurerm_role_assignment" "acr" {
   depends_on = [azurerm_kubernetes_cluster.this]
 }
 
-resource "kubernetes_namespace" "ingress_system" {
+resource "kubernetes_namespace" "ingress-system" {
   metadata {
     name = "ingress-system"
     labels = {
@@ -128,12 +128,12 @@ resource "kubernetes_namespace" "ingress_system" {
   depends_on = [azurerm_kubernetes_cluster.this]
 }
 
-resource "helm_release" "ingress_nginx" {
+resource "helm_release" "ingress-nginx" {
   name        = "ingress-nginx"
   repository  = "https://kubernetes.github.io/ingress-nginx"
   chart       = "ingress-nginx"
   max_history = "3"
-  namespace   = kubernetes_namespace.ingress_system.metadata[0].name
+  namespace   = kubernetes_namespace.ingress-system.metadata[0].name
   version     = "3.4.0"
 
   values = [<<EOF
@@ -151,10 +151,10 @@ rbac:
 EOF
   ]
 
-  depends_on = [azurerm_role_assignment.net, kubernetes_namespace.ingress_system]
+  depends_on = [azurerm_role_assignment.net, kubernetes_namespace.ingress-system]
 }
 
-resource "kubernetes_namespace" "kured_system" {
+resource "kubernetes_namespace" "kured-system" {
   metadata {
     name = "kured-system"
   }
@@ -167,7 +167,7 @@ resource "helm_release" "kured" {
   repository  = "https://weaveworks.github.io/kured"
   chart       = "kured"
   max_history = "3"
-  namespace   = kubernetes_namespace.kured_system.metadata[0].name
+  namespace   = kubernetes_namespace.kured-system.metadata[0].name
   version     = "2.2.0"
 
   values = [<<EOF
@@ -185,10 +185,10 @@ resources:
 EOF
   ]
 
-  depends_on = [kubernetes_namespace.kured_system]
+  depends_on = [kubernetes_namespace.kured-system]
 }
 
-resource "kubernetes_namespace" "certificate_system" {
+resource "kubernetes_namespace" "certificate-system" {
   metadata {
     name = "certificate-system"
   }
@@ -196,12 +196,12 @@ resource "kubernetes_namespace" "certificate_system" {
   depends_on = [azurerm_kubernetes_cluster.this]
 }
 
-resource "helm_release" "cert_manager" {
+resource "helm_release" "cert-manager" {
   name        = "cert-manager"
   repository  = "https://charts.jetstack.io"
   chart       = "cert-manager"
   max_history = "3"
-  namespace   = kubernetes_namespace.certificate_system.metadata[0].name
+  namespace   = kubernetes_namespace.certificate-system.metadata[0].name
   version     = "0.16.1"
 
   values = [<<EOF
@@ -210,7 +210,7 @@ nodeSelector."beta\.kubernetes\.io/os": linux
 EOF
   ]
 
-  depends_on = [kubernetes_namespace.certificate_system]
+  depends_on = [kubernetes_namespace.certificate-system]
 }
 
 resource "kubernetes_manifest" "cluster-issuer" {
@@ -249,5 +249,5 @@ resource "kubernetes_manifest" "cluster-issuer" {
     }
   }
 
-  depends_on = [helm_release.cert_manager]
+  depends_on = [helm_release.cert-manager]
 }

@@ -19,7 +19,7 @@ variables:
   - name: location
     value: southafricanorth
   - name: node_count
-    value: 1
+    value: 2
   - name: resource_group_create
     value: false
   - name: resource_group_name

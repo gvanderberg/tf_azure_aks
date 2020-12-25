@@ -88,7 +88,6 @@ variable "virtual_machine_size" {
 
 variable "tags" {
   default = {
-    costCentre  = "IT Dev"
     createdBy   = "Terraform"
     environment = "__tags_environment__"
     location    = "__tags_location__"
