@@ -48,13 +48,13 @@ resource "azurerm_kubernetes_cluster" "this" {
     enable_auto_scaling   = false
     enable_node_public_ip = false
     # availability_zones    = [1, 2, 3]
-    max_pods              = "110"
+    max_pods = "110"
     # max_count             = var.node_count + 2
     # min_count             = var.node_count
-    node_count            = var.node_count
-    type                  = "VirtualMachineScaleSets"
-    vm_size               = var.vm_size
-    vnet_subnet_id        = data.azurerm_subnet.this.id
+    node_count     = var.node_count
+    type           = "VirtualMachineScaleSets"
+    vm_size        = var.vm_size
+    vnet_subnet_id = data.azurerm_subnet.this.id
   }
 
   identity {
@@ -84,8 +84,8 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   role_based_access_control {
     azure_active_directory {
-      managed                 = true
-      admin_group_object_ids  = [data.azuread_group.this.id]
+      managed                = true
+      admin_group_object_ids = [data.azuread_group.this.id]
     }
     enabled = true
   }
@@ -129,12 +129,12 @@ resource "kubernetes_namespace" "ingress_system" {
 }
 
 resource "helm_release" "ingress_nginx" {
-  name             = "ingress-nginx"
-  repository       = "https://kubernetes.github.io/ingress-nginx"
-  chart            = "ingress-nginx"
-  max_history      = "3"
-  namespace        = kubernetes_namespace.ingress_system.metadata[0].name
-  version          = "3.4.0"
+  name        = "ingress-nginx"
+  repository  = "https://kubernetes.github.io/ingress-nginx"
+  chart       = "ingress-nginx"
+  max_history = "3"
+  namespace   = kubernetes_namespace.ingress_system.metadata[0].name
+  version     = "3.4.0"
 
   values = [<<EOF
 controller:
@@ -211,43 +211,4 @@ EOF
   ]
 
   depends_on = [kubernetes_namespace.certificate_system]
-}
-
-resource "kubernetes_manifest" "cluster-issuer" {
-  provider = kubernetes-alpha
-
-  manifest = {
-    apiVersion: "cert-manager.io/v1alpha2",
-    kind: "ClusterIssuer",
-    metadata: {
-      name: "letsencrypt"
-    },
-    spec: {
-      acme: {
-        server: "https://acme-v02.api.letsencrypt.org/directory",
-        email: var.support_email_address,
-        privateKeySecretRef: {
-          name: "letsencrypt"
-        },
-        solvers: [
-          {
-            http01: {
-              ingress: {
-                class: "nginx",
-                podTemplate: {
-                  spec: {
-                    nodeSelector: {
-                      "kubernetes.io/os": "linux"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-  }
-
-  depends_on = [helm_release.cert_manager]
 }
