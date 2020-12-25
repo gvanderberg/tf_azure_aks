@@ -1,3 +1,6 @@
+# input variables that need to be defined in the pipeline:
+## - managed-by
+
 pr: none
 
 trigger:
@@ -23,8 +26,8 @@ stages:
     parameters:
       condition: succeeded()
       dependsOn: package
-      displayName: release production
-      environment: prod (southafricanorth)
+      displayName: deploy prod
+      environment: production
       stageName: release_prd_we
       variableTemplate: release-variables-zn-prd.yml
 
@@ -32,8 +35,8 @@ stages:
     parameters:
       condition: succeeded()
       dependsOn: package
-      displayName: destroy production
-      environment: prod (southafricanorth)
+      displayName: destroy prod
+      environment: production
       stageName: destroy_prd_we
       templateName: terraform-steps-destroy.yml
       variableTemplate: release-variables-zn-prd.yml

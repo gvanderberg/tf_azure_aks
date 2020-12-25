@@ -43,4 +43,4 @@ variables:
   - name: virtual_machine_size
     value: Standard_B2s
   - name: workspace_name
-    value: tf_azure_ks-zn-prd
+    value: azure-ks-prd
