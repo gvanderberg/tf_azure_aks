@@ -28,7 +28,7 @@ stages:
       dependsOn: package
       displayName: deploy prod
       environment: production
-      stageName: release_prd_we
+      stageName: deploy_prod
       variableTemplate: release-variables-zn-prd.yml
 
   - template: terraform-stage.yml
@@ -37,6 +37,6 @@ stages:
       dependsOn: package
       displayName: destroy prod
       environment: production
-      stageName: destroy_prd_we
+      stageName: destroy_prod
       templateName: terraform-steps-destroy.yml
       variableTemplate: release-variables-zn-prd.yml
