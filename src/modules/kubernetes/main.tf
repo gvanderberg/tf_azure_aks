@@ -212,3 +212,42 @@ EOF
 
   depends_on = [kubernetes_namespace.certificate_system]
 }
+
+resource "kubernetes_manifest" "cluster-issuer" {
+  provider = kubernetes-alpha
+
+  manifest = {
+    apiVersion : "cert-manager.io/v1alpha2",
+    kind : "ClusterIssuer",
+    metadata : {
+      name : "letsencrypt"
+    },
+    spec : {
+      acme : {
+        server : "https://acme-v02.api.letsencrypt.org/directory",
+        email : var.support_email_address,
+        privateKeySecretRef : {
+          name : "letsencrypt"
+        },
+        solvers : [
+          {
+            http01 : {
+              ingress : {
+                class : "nginx",
+                podTemplate : {
+                  spec : {
+                    nodeSelector : {
+                      "kubernetes.io/os" : "linux"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+
+  depends_on = [helm_release.cert_manager]
+}

@@ -15,7 +15,7 @@ variables:
   - name: kubernetes_cluster_name
     value: azks-prd-zn-titansoft
   - name: kubernetes_version
-    value: 1.18.10
+    value: 1.19.3
   - name: location
     value: southafricanorth
   - name: node_count
