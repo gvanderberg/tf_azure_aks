@@ -45,12 +45,12 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   default_node_pool {
     name                  = "agentpool"
-    enable_auto_scaling   = false
+    enable_auto_scaling   = true
     enable_node_public_ip = false
     # availability_zones    = [1, 2, 3]
-    max_pods = "110"
-    # max_count             = var.node_count + 2
-    # min_count             = var.node_count
+    max_pods       = "110"
+    max_count      = var.node_count + 1
+    min_count      = var.node_count
     node_count     = var.node_count
     type           = "VirtualMachineScaleSets"
     vm_size        = var.vm_size
@@ -213,41 +213,41 @@ EOF
   depends_on = [kubernetes_namespace.certificate-system]
 }
 
-resource "kubernetes_manifest" "cluster-issuer" {
-  provider = kubernetes-alpha
+# resource "kubernetes_manifest" "cluster-issuer" {
+#   provider = kubernetes-alpha
 
-  manifest = {
-    apiVersion : "cert-manager.io/v1alpha2",
-    kind : "ClusterIssuer",
-    metadata : {
-      name : "letsencrypt"
-    },
-    spec : {
-      acme : {
-        server : "https://acme-v02.api.letsencrypt.org/directory",
-        email : var.support_email_address,
-        privateKeySecretRef : {
-          name : "letsencrypt"
-        },
-        solvers : [
-          {
-            http01 : {
-              ingress : {
-                class : "nginx",
-                podTemplate : {
-                  spec : {
-                    nodeSelector : {
-                      "kubernetes.io/os" : "linux"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-  }
+#   manifest = {
+#     apiVersion : "cert-manager.io/v1alpha2",
+#     kind : "ClusterIssuer",
+#     metadata : {
+#       name : "letsencrypt"
+#     },
+#     spec : {
+#       acme : {
+#         server : "https://acme-v02.api.letsencrypt.org/directory",
+#         email : var.support_email_address,
+#         privateKeySecretRef : {
+#           name : "letsencrypt"
+#         },
+#         solvers : [
+#           {
+#             http01 : {
+#               ingress : {
+#                 class : "nginx",
+#                 podTemplate : {
+#                   spec : {
+#                     nodeSelector : {
+#                       "kubernetes.io/os" : "linux"
+#                     }
+#                   }
+#                 }
+#               }
+#             }
+#           }
+#         ]
+#       }
+#     }
+#   }
 
-  depends_on = [helm_release.cert-manager]
-}
+#   depends_on = [helm_release.cert-manager]
+# }
