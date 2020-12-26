@@ -213,41 +213,77 @@ EOF
   depends_on = [kubernetes_namespace.certificate-system]
 }
 
-# resource "kubernetes_manifest" "cluster-issuer" {
-#   provider = kubernetes-alpha
+resource "kubernetes_namespace" "logging" {
+  metadata {
+    name = "logging"
+  }
 
-#   manifest = {
-#     apiVersion : "cert-manager.io/v1alpha2",
-#     kind : "ClusterIssuer",
-#     metadata : {
-#       name : "letsencrypt"
-#     },
-#     spec : {
-#       acme : {
-#         server : "https://acme-v02.api.letsencrypt.org/directory",
-#         email : var.support_email_address,
-#         privateKeySecretRef : {
-#           name : "letsencrypt"
-#         },
-#         solvers : [
-#           {
-#             http01 : {
-#               ingress : {
-#                 class : "nginx",
-#                 podTemplate : {
-#                   spec : {
-#                     nodeSelector : {
-#                       "kubernetes.io/os" : "linux"
-#                     }
-#                   }
-#                 }
-#               }
-#             }
-#           }
-#         ]
-#       }
-#     }
-#   }
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
 
-#   depends_on = [helm_release.cert-manager]
-# }
+resource "helm_release" "seq" {
+  name        = "seq"
+  repository  = "https://helm.datalust.co"
+  chart       = "seq"
+  max_history = "3"
+  namespace   = kubernetes_namespace.logging.metadata[0].name
+
+  values = [<<EOF
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+persistence:
+  storageClass: managed-premium
+resources:
+  limits:
+    memory: 64Mi
+ui:
+  ingress:
+    enabled: true
+    path: /
+    hosts:
+      - seq.titansoftware.co.za
+EOF
+  ]
+
+  depends_on = [kubernetes_namespace.logging]
+}
+
+resource "kubernetes_manifest" "cluster-issuer" {
+  provider = kubernetes-alpha
+
+  manifest = {
+    apiVersion : "cert-manager.io/v1alpha2",
+    kind : "ClusterIssuer",
+    metadata : {
+      name : "letsencrypt"
+    },
+    spec : {
+      acme : {
+        server : "https://acme-v02.api.letsencrypt.org/directory",
+        email : var.support_email_address,
+        privateKeySecretRef : {
+          name : "letsencrypt"
+        },
+        solvers : [
+          {
+            http01 : {
+              ingress : {
+                class : "nginx",
+                podTemplate : {
+                  spec : {
+                    nodeSelector : {
+                      "kubernetes.io/os" : "linux"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+
+  depends_on = [helm_release.cert-manager]
+}
