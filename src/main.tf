@@ -43,7 +43,6 @@ module "aks" {
   subnet_name                 = var.subnet_name
   subnet_virtual_network_name = var.subnet_virtual_network_name
   subnet_resource_group_name  = var.subnet_resource_group_name
-  support_email_address       = var.support_email_address
   vm_size                     = var.virtual_machine_size
   tags                        = var.tags
 }

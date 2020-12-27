@@ -34,8 +34,6 @@ variables:
     value: azrg-prd-zn-net
   - name: subnet_virtual_network_name
     value: aznet-prd-zn-titansoft
-  - name: support_email_address
-    value: $(managed-by)
   - name: tags_environment
     value: Production
   - name: terraform_version
