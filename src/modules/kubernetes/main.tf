@@ -141,3 +141,40 @@ EOF
 
   depends_on = [kubernetes_namespace.certificate-system]
 }
+
+resource "kubernetes_namespace" "ingress-system" {
+  metadata {
+    name = "ingress-system"
+    labels = {
+      "cert-manager.io/disable-validation" = true
+    }
+  }
+
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
+
+resource "helm_release" "ingress-system" {
+  name        = "ingress-nginx"
+  repository  = "https://kubernetes.github.io/ingress-nginx"
+  chart       = "ingress-nginx"
+  max_history = "3"
+  namespace   = kubernetes_namespace.ingress-system.metadata[0].name
+  version     = "3.4.0"
+
+  values = [<<EOF
+controller:
+  image:
+    tag: v0.40.0
+  nodeSelector."beta\.kubernetes\.io/os": linux
+  replicaCount: 2
+  service:
+    type: LoadBalancer
+defaultBackend:
+  nodeSelector."beta\.kubernetes\.io/os": linux
+rbac:
+  create: true
+EOF
+  ]
+
+  depends_on = [kubernetes_namespace.ingress-system]
+}
