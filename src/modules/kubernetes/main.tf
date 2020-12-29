@@ -116,3 +116,28 @@ resource "azurerm_role_assignment" "acr" {
 
   depends_on = [azurerm_kubernetes_cluster.this]
 }
+
+resource "kubernetes_namespace" "certificate-system" {
+  metadata {
+    name = "certificate-system"
+  }
+
+  depends_on = [azurerm_kubernetes_cluster.this]
+}
+
+resource "helm_release" "certificate-system" {
+  name        = "cert-manager"
+  repository  = "https://charts.jetstack.io"
+  chart       = "cert-manager"
+  max_history = "3"
+  namespace   = kubernetes_namespace.certificate-system.metadata[0].name
+  version     = "0.16.1"
+
+  values = [<<EOF
+installCRDs: true
+nodeSelector."beta\.kubernetes\.io/os": linux
+EOF
+  ]
+
+  depends_on = [kubernetes_namespace.certificate-system]
+}
