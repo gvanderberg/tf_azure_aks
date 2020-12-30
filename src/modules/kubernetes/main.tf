@@ -183,6 +183,7 @@ controller:
   nodeSelector."beta\.kubernetes\.io/os": linux
   replicaCount: 2
   service:
+    loadBalancerIP: ${var.load_balancer_ip}
     type: LoadBalancer
 defaultBackend:
   nodeSelector."beta\.kubernetes\.io/os": linux

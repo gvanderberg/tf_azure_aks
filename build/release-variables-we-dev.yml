@@ -16,6 +16,8 @@ variables:
     value: azks-dev-we-titansoft
   - name: kubernetes_version
     value: 1.19.3
+  - name: load_balancer_ip
+    value: 20.71.10.91
   - name: location
     value: westeurope
   - name: node_count
