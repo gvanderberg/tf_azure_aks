@@ -38,9 +38,9 @@ stages:
         displayName: deployment job
         environment: ${{ parameters.environment }}
         variables:
+          - template: ${{ parameters.variableTemplate }}
           - name: host
             value: $[ dependencies.provision.outputs['terraformApply.host'] ]
-          - template: ${{ parameters.variableTemplate }}
 
         strategy:
           runOnce:

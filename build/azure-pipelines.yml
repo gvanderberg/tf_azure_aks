@@ -26,17 +26,26 @@ stages:
     parameters:
       condition: succeeded()
       dependsOn: package
-      displayName: deploy prod
-      environment: production
-      stageName: deploy_prod
-      variableTemplate: release-variables-zn-prd.yml
+      displayName: deploy dev
+      environment: development
+      stageName: deploy_dev
+      variableTemplate: release-variables-we-dev.yml
 
   - template: terraform-stage.yml
     parameters:
       condition: succeeded()
       dependsOn: package
-      displayName: destroy prod
-      environment: production
-      stageName: destroy_prod
+      displayName: destroy dev
+      environment: destroy
+      stageName: destroy_dev
       templateName: terraform-steps-destroy.yml
-      variableTemplate: release-variables-zn-prd.yml
+      variableTemplate: release-variables-we-dev.yml
+
+  - template: release-stage.yml
+    parameters:
+      condition: succeeded()
+      dependsOn: deploy_dev
+      displayName: deploy prod
+      environment: production
+      stageName: deploy_prod
+      variableTemplate: release-variables-we-prd.yml

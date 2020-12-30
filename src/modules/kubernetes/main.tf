@@ -44,17 +44,15 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                  = "agentpool"
-    enable_auto_scaling   = true
+    name                  = "systempool"
+    enable_auto_scaling   = false
     enable_node_public_ip = false
-    # availability_zones    = [1, 2, 3]
-    max_pods       = "110"
-    max_count      = var.node_count + 1
-    min_count      = var.node_count
-    node_count     = var.node_count
-    type           = "VirtualMachineScaleSets"
-    vm_size        = var.vm_size
-    vnet_subnet_id = data.azurerm_subnet.this.id
+    availability_zones    = [1, 2, 3]
+    max_pods              = "110"
+    node_count            = var.node_count
+    type                  = "VirtualMachineScaleSets"
+    vm_size               = var.vm_size
+    vnet_subnet_id        = data.azurerm_subnet.this.id
   }
 
   identity {
@@ -91,6 +89,23 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   tags = var.tags
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "this" {
+  name                  = "agentpool"
+  availability_zones    = [1, 2, 3]
+  enable_auto_scaling   = true
+  enable_node_public_ip = false
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
+  max_pods              = "110"
+  max_count             = var.node_count + 1
+  min_count             = var.node_count
+  node_count            = 1
+  vm_size               = var.vm_size
+  vnet_subnet_id        = data.azurerm_subnet.this.id
+  tags                  = var.tags
+
+  depends_on = [azurerm_kubernetes_cluster.this]
 }
 
 resource "azurerm_role_assignment" "aks" {
